@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A5C86">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Prépa padel">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Prépa padel</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap');
+
+:root{
+  --ink:#08293D;
+  --field:#E7EFF3;
+  --card:#FFFFFF;
+  --line:#0A5C86;
+  --rail:#C2D5DF;
+  --ball:#C6E23F;
+  --muted:#5C7C8E;
+  --warn:#B5451B;
+  --display:'Barlow Condensed','Arial Narrow',Impact,system-ui,sans-serif;
+  --body:'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --data:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--field);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.45;
+  padding-bottom:96px;
+}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+
+/* ---------- header ---------- */
+header{
+  background:var(--line);
+  color:#fff;
+  padding:18px 0 16px;
+  border-bottom:3px solid var(--ball);
+}
+.brand{
+  font-family:var(--display);
+  font-weight:700;
+  font-size:clamp(30px,9vw,44px);
+  letter-spacing:.02em;
+  text-transform:uppercase;
+  line-height:.95;
+  margin:0;
+}
+.brand span{color:var(--ball)}
+.tag{
+  font-family:var(--data);
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#9FC4D6;
+  margin-top:6px;
+}
+
+/* ---------- controls ---------- */
+.controls{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+.ctl-label{
+  font-family:var(--data);
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:5px;
+}
+.seg{display:flex;gap:6px}
+.seg button{
+  flex:1;
+  font-family:var(--display);
+  font-size:19px;
+  font-weight:600;
+  letter-spacing:.03em;
+  text-transform:uppercase;
+  padding:12px 4px 10px;
+  background:var(--card);
+  color:var(--ink);
+  border:2px solid var(--rail);
+  border-radius:2px;
+  cursor:pointer;
+  transition:background .12s,border-color .12s;
+}
+.seg button .sub{
+  display:block;
+  font-family:var(--data);
+  font-size:10px;
+  font-weight:400;
+  letter-spacing:.06em;
+  color:var(--muted);
+  text-transform:none;
+  margin-top:1px;
+}
+.seg button[aria-pressed="true"]{
+  background:var(--ink);
+  border-color:var(--ink);
+  color:#fff;
+}
+.seg button[aria-pressed="true"] .sub{color:var(--ball)}
+.seg button:focus-visible{outline:3px solid var(--ball);outline-offset:2px}
+
+.row2{display:flex;gap:10px}
+.row2>div{flex:1}
+select{
+  width:100%;
+  font-family:var(--body);
+  font-size:15px;
+  padding:10px;
+  border:2px solid var(--rail);
+  border-radius:2px;
+  background:var(--card);
+  color:var(--ink);
+}
+
+/* ---------- session note ---------- */
+.note{
+  margin-top:12px;
+  background:#DCE8EE;
+  border-left:4px solid var(--line);
+  padding:10px 12px;
+  font-size:14px;
+}
+.note strong{font-weight:600}
+
+/* ---------- blocks ---------- */
+.bloc{margin-top:26px}
+.bloc-head{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  border-bottom:2px solid var(--ink);
+  padding-bottom:4px;
+  margin-bottom:2px;
+}
+.bloc-head h2{
+  font-family:var(--display);
+  text-transform:uppercase;
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:.03em;
+  margin:0;
+}
+.bloc-head .meta{
+  font-family:var(--data);
+  font-size:10px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-left:auto;
+}
+
+/* ---------- rail + exercise ---------- */
+.rail{position:relative;padding-left:26px}
+.rail::before{
+  content:'';
+  position:absolute;
+  left:8px;top:6px;bottom:6px;
+  width:2px;
+  background:var(--rail);
+}
+.ex{
+  position:relative;
+  background:var(--card);
+  border:2px solid var(--rail);
+  border-radius:2px;
+  padding:12px 12px 10px;
+  margin:10px 0;
+}
+.ex::before{
+  content:'';
+  position:absolute;
+  left:-22px;top:20px;
+  width:12px;height:12px;
+  border-radius:50%;
+  background:var(--field);
+  border:2px solid var(--rail);
+}
+.ex.done{border-color:var(--line)}
+.ex.done::before{background:var(--ball);border-color:var(--line)}
+.ex.beyond{opacity:.45}
+
+.ex-top{display:flex;gap:10px;align-items:flex-start}
+.ex-name{
+  font-family:var(--display);
+  font-size:21px;
+  font-weight:600;
+  line-height:1.05;
+  letter-spacing:.01em;
+  flex:1;
+}
+.chk{
+  width:34px;height:34px;flex:none;
+  border:2px solid var(--rail);
+  border-radius:2px;
+  background:var(--card);
+  cursor:pointer;
+  font-size:18px;
+  line-height:1;
+  color:var(--line);
+}
+.chk[aria-pressed="true"]{background:var(--ball);border-color:var(--line)}
+.chk:focus-visible{outline:3px solid var(--line);outline-offset:2px}
+
+.presc{
+  display:flex;gap:8px;flex-wrap:wrap;
+  margin-top:8px;
+}
+.pill{
+  font-family:var(--data);
+  font-size:12px;
+  letter-spacing:.04em;
+  padding:4px 8px;
+  background:var(--field);
+  border-radius:2px;
+}
+.pill.sets{background:var(--ink);color:#fff}
+button.pill.rest{
+  border:2px solid var(--line);
+  background:var(--card);
+  color:var(--line);
+  cursor:pointer;
+  font-family:var(--data);
+}
+button.pill.rest:focus-visible{outline:3px solid var(--ball);outline-offset:2px}
+
+.ex-note{
+  margin-top:8px;
+  font-size:13.5px;
+  color:var(--warn);
+  border-left:3px solid var(--warn);
+  padding-left:8px;
+}
+
+.inputs{display:flex;gap:8px;margin-top:10px}
+.inputs label{flex:1}
+.inputs .ctl-label{margin-bottom:3px}
+.inputs input{
+  width:100%;
+  font-family:var(--data);
+  font-size:15px;
+  padding:8px;
+  border:2px solid var(--rail);
+  border-radius:2px;
+  background:#F7FAFB;
+  color:var(--ink);
+}
+.inputs input:focus{outline:none;border-color:var(--line);background:#fff}
+.last{
+  font-family:var(--data);
+  font-size:11px;
+  color:var(--muted);
+  margin-top:6px;
+}
+.last b{color:var(--ink);font-weight:600}
+
+.cut{
+  position:relative;
+  margin:18px 0 8px;
+  border-top:2px dashed var(--line);
+  text-align:center;
+}
+.cut span{
+  position:relative;top:-10px;
+  background:var(--field);
+  padding:0 10px;
+  font-family:var(--data);
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--line);
+}
+
+/* ---------- footer actions ---------- */
+.actions{margin-top:28px;display:flex;gap:10px;flex-wrap:wrap}
+.btn{
+  font-family:var(--display);
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  font-size:18px;
+  font-weight:600;
+  padding:13px 18px;
+  border:2px solid var(--ink);
+  border-radius:2px;
+  background:var(--ink);
+  color:#fff;
+  cursor:pointer;
+  flex:1;
+}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:focus-visible{outline:3px solid var(--ball);outline-offset:2px}
+
+.hist{margin-top:30px;border-top:2px solid var(--ink);padding-top:10px}
+.hist h2{
+  font-family:var(--display);
+  text-transform:uppercase;
+  font-size:20px;
+  margin:0 0 8px;
+}
+.hist-row{
+  display:flex;gap:10px;align-items:baseline;
+  font-family:var(--data);
+  font-size:12.5px;
+  padding:6px 0;
+  border-bottom:1px solid var(--rail);
+}
+.hist-row .d{color:var(--muted)}
+.hist-row .s{font-weight:600}
+.empty{font-size:14px;color:var(--muted);padding:8px 0}
+
+/* ---------- rest timer ---------- */
+.timer{
+  position:fixed;left:0;right:0;bottom:0;
+  background:var(--ink);
+  color:#fff;
+  transform:translateY(110%);
+  transition:transform .22s ease;
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  z-index:20;
+}
+.timer.on{transform:translateY(0)}
+.timer-in{
+  max-width:720px;margin:0 auto;
+  display:flex;align-items:center;gap:14px;
+}
+.timer .count{
+  font-family:var(--display);
+  font-size:42px;
+  font-weight:700;
+  line-height:1;
+  color:var(--ball);
+  min-width:78px;
+}
+.timer .lbl{
+  font-family:var(--data);
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:#9FC4D6;
+  flex:1;
+}
+.timer button{
+  font-family:var(--display);
+  text-transform:uppercase;
+  font-size:16px;
+  padding:9px 14px;
+  background:transparent;
+  border:2px solid var(--ball);
+  color:var(--ball);
+  border-radius:2px;
+  cursor:pointer;
+}
+.bar{height:3px;background:#164C6C;margin-top:10px;max-width:720px;margin-left:auto;margin-right:auto}
+.bar i{display:block;height:100%;background:var(--ball);width:100%}
+
+/* ---------- articulations ---------- */
+.dose-head{
+  background:var(--card);
+  border:2px solid var(--ink);
+  border-radius:2px;
+  padding:14px 12px;
+  margin-top:14px;
+}
+.dose-row{display:flex;gap:8px;margin-top:10px}
+.dose-row button{
+  flex:1;
+  font-family:var(--display);
+  font-size:17px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.03em;
+  padding:14px 4px;
+  background:var(--card);
+  border:2px solid var(--rail);
+  border-radius:2px;
+  color:var(--ink);
+  cursor:pointer;
+}
+.dose-row button[aria-pressed="true"]{background:var(--ball);border-color:var(--ink)}
+.dose-row button:focus-visible{outline:3px solid var(--line);outline-offset:2px}
+.streak{
+  font-family:var(--data);
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-top:10px;
+}
+.streak b{color:var(--line);font-size:15px}
+.warn{
+  margin-top:14px;
+  background:#F6E4DB;
+  border-left:4px solid var(--warn);
+  padding:11px 12px;
+  font-size:14px;
+}
+.warn b{font-weight:600}
+.mob-when{
+  font-family:var(--data);
+  font-size:11px;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+/* ---------- schémas position de départ ---------- */
+.figbtn{
+  margin-top:9px;
+  font-family:var(--data);
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  background:transparent;
+  border:none;
+  border-bottom:2px solid var(--ball);
+  color:var(--line);
+  padding:2px 0;
+  cursor:pointer;
+}
+.figbtn:focus-visible{outline:3px solid var(--line);outline-offset:3px}
+.figbox{display:none;margin-top:10px;background:#F2F7F9;border:2px solid var(--rail);border-radius:2px;padding:8px}
+.figbox.on{display:block}
+.figbox svg{width:100%;max-width:280px;display:block;margin:0 auto}
+.figcap{font-size:13.5px;margin-top:6px}
+.figleg{
+  font-family:var(--data);font-size:10px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);margin-top:6px;
+  display:flex;gap:12px;flex-wrap:wrap;
+}
+.figleg i{display:inline-block;width:14px;height:0;border-top:3px solid var(--ball);vertical-align:middle;margin-right:4px}
+.figleg u{display:inline-block;width:9px;height:9px;background:var(--ink);text-decoration:none;vertical-align:middle;margin-right:4px}
+svg .b{fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+svg .hd{fill:none;stroke:var(--ink);stroke-width:2.6}
+svg .band{fill:none;stroke:var(--ball);stroke-width:3;stroke-linecap:round}
+svg .anch{fill:var(--ink)}
+svg .gr{stroke:var(--rail);stroke-width:2}
+svg .arr{fill:none;stroke:var(--muted);stroke-width:2;stroke-dasharray:4 3;marker-end:url(#ah)}
+svg .traj{fill:none;stroke:var(--muted);stroke-width:1.8;stroke-dasharray:3 3}
+svg text{font-family:var(--data);font-size:9px;fill:var(--muted)}
+svg .be{fill:var(--ball)}
+svg .br{fill:var(--rail)}
+svg .flr{stroke:var(--ink);stroke-width:2.6;stroke-linecap:round}
+
+.status{
+  position:fixed;top:0;left:0;right:0;
+  background:var(--ball);color:var(--ink);
+  font-family:var(--data);font-size:12px;
+  text-align:center;padding:7px;
+  transform:translateY(-110%);
+  transition:transform .2s;
+  z-index:30;
+}
+.status.on{transform:translateY(0)}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="status" id="status"></div>
+
+<header>
+  <div class="wrap">
+    <h1 class="brand">Prépa <span>padel</span></h1>
+    <div class="tag">8 semaines · élastiques · 2 séances/semaine</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="controls">
+    <div id="durWrap">
+      <div class="ctl-label">Temps dispo aujourd'hui</div>
+      <div class="seg" id="segDur"></div>
+    </div>
+    <div class="row2">
+      <div>
+        <div class="ctl-label">Séance</div>
+        <select id="selSession">
+          <option value="A">A — Haut du corps</option>
+          <option value="B">B — Explosivité jambes</option>
+          <option value="M">Articulations — hors séance</option>
+        </select>
+      </div>
+      <div id="weekWrap">
+        <div class="ctl-label">Semaine</div>
+        <select id="selWeek"></select>
+      </div>
+    </div>
+  </div>
+
+  <div id="storageBadge" style="font-family:var(--data);font-size:11px;color:var(--muted);margin-top:10px;line-height:1.4"></div>
+
+  <div class="note" id="note"></div>
+
+  <div id="blocs"></div>
+
+  <div class="actions">
+    <button class="btn" id="btnFinish">Terminer la séance</button>
+    <button class="btn ghost" id="btnReset">Décocher tout</button>
+  </div>
+
+  <div class="actions" id="dataActions" style="margin-top:18px">
+    <button class="btn ghost" id="btnExport" style="font-size:15px">Exporter mes données</button>
+    <button class="btn ghost" id="btnImport" style="font-size:15px">Importer</button>
+    <input type="file" id="fileImport" accept="application/json" style="display:none">
+  </div>
+
+  <div class="hist">
+    <h2>Séances enregistrées</h2>
+    <div id="histList"></div>
+  </div>
+</div>
+
+<div class="timer" id="timer">
+  <div class="timer-in">
+    <div class="count" id="tCount">0:00</div>
+    <div class="lbl" id="tLabel">Repos</div>
+    <button id="tStop">Passer</button>
+  </div>
+  <div class="bar"><i id="tBar"></i></div>
+</div>
+
+<script>
+const KEY = 'padel-prep-v1';
+
+const PROGRAM = {
+  A: [
+    {bloc:'Force', id:'dev-couche', name:'Développé couché élastique', detail:'ancrage porte', sets:{30:3,45:4,60:4}, reps:'8–10', rest:90, tier:30},
+    {bloc:'Force', id:'tirage', name:'Tirage horizontal élastique', detail:'rowing', sets:{30:3,45:4,60:4}, reps:'10–12', rest:90, tier:30},
+    {bloc:'Force', id:'pompes', name:'Pompes', detail:'surélevées si besoin', sets:{30:2,45:3,60:3}, reps:'max −2', rest:90, tier:30},
+    {bloc:'Force', id:'rot-ext', name:'Rotation externe d\u2019épaule', detail:'coiffe des rotateurs', sets:{30:2,45:3,60:3}, reps:'15 / bras', rest:45, tier:30,
+      note:'Reste dans le noyau même en 30 min. C\u2019est ce qui encaisse les smashes répétés.'},
+    {bloc:'Gainage', id:'planche', name:'Planche', sets:{30:2,45:3,60:3}, reps:'40 s', rest:45, tier:30},
+    {bloc:'Force', id:'dev-mil', name:'Développé militaire élastique', sets:{45:3,60:3}, reps:'10', rest:60, tier:45},
+    {bloc:'Gainage', id:'planche-lat', name:'Planche latérale', sets:{45:2,60:3}, reps:'30 s / côté', rest:45, tier:45},
+    {bloc:'Force', id:'face-pull', name:'Face pull élastique', sets:{60:3}, reps:'15', rest:45, tier:60},
+    {bloc:'Force', id:'bras', name:'Curl + extension triceps', sets:{60:2}, reps:'12 chacun', rest:45, tier:60}
+  ],
+  B: [
+    {bloc:'Pliométrie', id:'squat-jump', name:'Squat jumps', sets:{30:3,45:3,60:4}, reps:'6', rest:90, tier:30},
+    {bloc:'Pliométrie', id:'skater', name:'Skater jumps', detail:'bonds latéraux', sets:{30:3,45:3,60:4}, reps:'6 / côté', rest:90, tier:30,
+      note:'Le plus spécifique padel avec le départ 3 m. Si la réception devient molle, la série est finie.'},
+    {bloc:'Pliométrie', id:'depart', name:'Départs explosifs 3 m', sets:{30:5,45:6,60:6}, reps:'1 départ', rest:60, tier:30},
+    {bloc:'Pliométrie', id:'split-jump', name:'Split jumps', detail:'fentes sautées', sets:{45:3,60:3}, reps:'8 / jambe', rest:75, tier:45},
+    {bloc:'Force', id:'squat-elast', name:'Squat élastique', sets:{30:3,45:3,60:3}, reps:'12', rest:60, tier:30},
+    {bloc:'Force', id:'mollets', name:'Mollets debout', sets:{30:2,45:3,60:3}, reps:'20', rest:45, tier:30},
+    {bloc:'Force', id:'sdt', name:'Soulevé de terre roumain élastique', sets:{45:3,60:3}, reps:'12', rest:60, tier:45},
+    {bloc:'Gainage', id:'pallof', name:'Pallof press élastique', detail:'anti-rotation', sets:{45:2,60:3}, reps:'12 / côté', rest:45, tier:45},
+    {bloc:'Force', id:'bulgare', name:'Fente bulgare', detail:'pied arrière sur chaise', sets:{60:3}, reps:'10 / jambe', rest:60, tier:60},
+    {bloc:'Cardio', id:'intervalles', name:'Intervalles 20 s / 40 s', sets:{60:1}, reps:'8 min', rest:0, tier:60}
+  ]
+};
+
+const BLOC_ORDER = {A:['Force','Gainage'], B:['Pliométrie','Force','Gainage','Cardio']};
+
+const MOBILITY = [
+  {bloc:'Poignets', name:'Ouverture / fermeture de poing', presc:'20 reps', when:'assis au bureau, entre deux compils',
+    detail:'Serrer fort 2 s, puis ouvrir en écartant les doigts au maximum 2 s.'},
+  {bloc:'Poignets', name:'Pronation / supination', presc:'15 reps par bras', when:'coude collé au corps',
+    detail:'Coude à 90°, tourner lentement la paume vers le haut puis vers le bas. Amplitude complète, sans forcer.'},
+  {bloc:'Poignets', name:'Isométrie contre la paume', presc:'5 × 10 s par sens', when:'partout, mains libres',
+    detail:'Main contre main. Pousser en flexion, puis en extension, puis sur chaque côté. Aucune articulation ne bouge.'},
+  {bloc:'Poignets', name:'Appuis paumes sur table', presc:'3 × 30 s', when:'devant un bureau',
+    detail:'Paumes à plat, doigts vers soi puis vers l\u2019avant. Transférer le poids progressivement, sans à-coup.'},
+  {bloc:'Poignets', name:'Étirement fléchisseurs / extenseurs', presc:'20 s par position', when:'en fin de journée',
+    detail:'Bras tendu devant, tirer doucement la main vers le haut puis vers le bas avec l\u2019autre main.'},
+
+  {bloc:'Chevilles', name:'Équilibre sur un pied', presc:'3 × 30 s par pied', when:'en te brossant les dents, en cuisinant',
+    detail:'Pied nu si possible. Quand c\u2019est facile : yeux fermés, puis sur un coussin.'},
+  {bloc:'Chevilles', name:'Montées sur pointes', presc:'2 × 20 reps', when:'debout, n\u2019importe où',
+    detail:'Monter lentement, redescendre encore plus lentement (3 s). C\u2019est la descente qui compte.'},
+  {bloc:'Chevilles', name:'Flexion dorsale genou au mur', presc:'10 reps par jambe', when:'près d\u2019un mur',
+    detail:'Pied à ~10 cm du mur, avancer le genou vers le mur sans décoller le talon.'},
+  {bloc:'Chevilles', name:'Marche pointes / talons', presc:'20 pas de chaque', when:'dans le couloir',
+    detail:'Aller sur la pointe des pieds, revenir sur les talons.'},
+  {bloc:'Chevilles', name:'Griffe d\u2019orteils', presc:'2 × 15 reps', when:'assis, pieds nus',
+    detail:'Attraper une serviette au sol avec les orteils et la ramener vers soi.'}
+];
+const MOB_BLOCS = ['Poignets','Chevilles'];
+
+/* ---------- schémas de position de départ ---------- */
+const SVG_HEAD = '<svg viewBox="0 0 120 100" role="img" aria-label="Schéma de la position de départ">'
+  + '<defs><marker id="ah" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">'
+  + '<path d="M0 0 L7 3.5 L0 7 z" fill="#5C7C8E"/></marker></defs>'
+  + '<line class="gr" x1="4" y1="92" x2="116" y2="92"/>';
+
+// corps de référence
+const SIDE = '<circle class="hd" cx="48" cy="20" r="7"/><path class="b" d="M48 27 L48 58"/>'
+  + '<path class="b" d="M48 58 L42 76 L40 92"/><path class="b" d="M48 58 L56 76 L58 92"/>';
+const FRONT = '<circle class="hd" cx="60" cy="18" r="7"/><path class="b" d="M60 25 L60 56"/>'
+  + '<path class="b" d="M60 56 L50 76 L48 92"/><path class="b" d="M60 56 L70 76 L72 92"/>';
+
+const FIGURES = {
+  'dev-couche': {
+    svg: SIDE
+      + '<path class="b" d="M48 33 L36 40 L46 41"/>'
+      + '<rect class="anch" x="6" y="14" width="6" height="60"/>'
+      + '<path class="band" d="M12 34 Q28 30 46 41"/>'
+      + '<path class="arr" d="M56 40 L78 40"/>',
+    cap: 'Dos à la porte, élastique ancré derrière toi à hauteur de poitrine. Mains devant les pectoraux, coudes fléchis et légèrement sous la ligne des épaules. Tu pousses vers l\u2019avant.'
+  },
+  'tirage': {
+    svg: '<circle class="hd" cx="48" cy="20" r="7"/><path class="b" d="M48 27 L48 58"/>'
+      + '<path class="b" d="M48 58 L42 76 L40 92"/><path class="b" d="M48 58 L56 76 L58 92"/>'
+      + '<path class="b" d="M48 33 L74 40"/>'
+      + '<rect class="anch" x="108" y="14" width="6" height="60"/>'
+      + '<path class="band" d="M108 40 L74 40"/>'
+      + '<path class="arr" d="M80 52 L54 52"/>',
+    cap: 'Élastique ancré devant toi à hauteur de nombril. Bras tendus, omoplates relâchées vers l\u2019avant au départ. Tu tires les coudes vers l\u2019arrière en serrant les omoplates.'
+  },
+  'dev-mil': {
+    svg: FRONT
+      + '<path class="b" d="M60 31 L48 42 L50 30"/><path class="b" d="M60 31 L72 42 L70 30"/>'
+      + '<path class="band" d="M48 92 Q44 60 50 30"/><path class="band" d="M72 92 Q76 60 70 30"/>'
+      + '<path class="arr" d="M84 30 L84 12"/>',
+    cap: 'Debout sur l\u2019élastique, pieds écartés largeur de bassin. Mains à hauteur d\u2019épaules, coudes pointés vers le bas. Tu pousses à la verticale sans cambrer le bas du dos.'
+  },
+  'face-pull': {
+    svg: '<circle class="hd" cx="48" cy="20" r="7"/><path class="b" d="M48 27 L48 58"/>'
+      + '<path class="b" d="M48 58 L42 76 L40 92"/><path class="b" d="M48 58 L56 76 L58 92"/>'
+      + '<path class="b" d="M48 33 L76 24"/>'
+      + '<rect class="anch" x="108" y="8" width="6" height="24"/>'
+      + '<path class="band" d="M108 18 L76 24"/>'
+      + '<path class="arr" d="M80 34 L54 34"/>',
+    cap: 'Élastique ancré haut, au-dessus de la tête. Bras tendus vers l\u2019avant au départ. Tu tires vers le front en écartant les coudes, mains qui finissent au niveau des tempes.'
+  },
+  'bras': {
+    svg: FRONT
+      + '<path class="b" d="M60 31 L52 46 L52 58"/><path class="b" d="M60 31 L68 46 L68 58"/>'
+      + '<path class="band" d="M48 92 Q48 74 52 58"/><path class="band" d="M72 92 Q72 74 68 58"/>'
+      + '<path class="arr" d="M84 56 L84 36"/>',
+    cap: 'Debout sur l\u2019élastique, bras le long du corps, paumes vers l\u2019avant. Coudes collés aux côtes pendant tout le mouvement — seul l\u2019avant-bras monte.'
+  },
+  'rot-ext': {
+    svg: FRONT
+      + '<path class="b" d="M60 31 L70 44 L56 46"/>'
+      + '<rect class="anch" x="6" y="30" width="6" height="30"/>'
+      + '<path class="band" d="M12 45 L56 46"/>'
+      + '<path class="arr" d="M62 56 Q80 58 88 46"/>',
+    cap: 'Élastique ancré sur le côté, à hauteur de coude. Coude collé aux côtes, fléchi à 90°, main devant le nombril. Tu ouvres vers l\u2019extérieur sans décoller le coude — amplitude courte, mouvement lent.'
+  },
+  'squat-elast': {
+    svg: FRONT
+      + '<path class="b" d="M60 31 L50 40 L52 29"/><path class="b" d="M60 31 L70 40 L68 29"/>'
+      + '<path class="band" d="M48 92 Q42 58 52 29"/><path class="band" d="M72 92 Q78 58 68 29"/>'
+      + '<path class="arr" d="M86 40 L86 62"/>',
+    cap: 'Debout sur l\u2019élastique, pieds largeur d\u2019épaules. L\u2019élastique passe derrière les bras, mains calées à hauteur d\u2019épaules. Tu descends en poussant les hanches vers l\u2019arrière.'
+  },
+  'sdt': {
+    svg: SIDE
+      + '<path class="b" d="M48 33 L52 52 L52 60"/>'
+      + '<path class="band" d="M40 92 Q40 74 52 60"/><path class="band" d="M58 92 Q60 74 52 60"/>'
+      + '<path class="arr" d="M70 58 Q84 62 84 74"/>',
+    cap: 'Debout sur l\u2019élastique, mains devant les cuisses, dos droit et genoux à peine fléchis. Tu envoies les hanches vers l\u2019arrière en gardant les tibias verticaux. Tu dois sentir l\u2019arrière des cuisses, pas le bas du dos.'
+  },
+  'pallof': {
+    svg: SIDE
+      + '<path class="b" d="M48 33 L58 40"/>'
+      + '<rect class="anch" x="6" y="26" width="6" height="30"/>'
+      + '<path class="band" d="M12 40 L58 40"/>'
+      + '<path class="arr" d="M64 40 L86 40"/>',
+    cap: 'Élastique ancré sur le côté, à hauteur de poitrine. Mains jointes contre le sternum, pieds ancrés au sol. Tu tends les bras devant toi : l\u2019élastique cherche à te faire pivoter, tu résistes. Le buste ne bouge pas d\u2019un millimètre.'
+  },
+  'squat-jump': {
+    svg: '<circle class="hd" cx="60" cy="30" r="7"/><path class="b" d="M60 37 L60 56"/>'
+      + '<path class="b" d="M60 56 L48 70 L46 92"/><path class="b" d="M60 56 L72 70 L74 92"/>'
+      + '<path class="b" d="M60 40 L50 48 L44 42"/><path class="b" d="M60 40 L70 48 L76 42"/>'
+      + '<path class="arr" d="M96 54 L96 24"/>',
+    cap: 'Départ en demi-squat, cuisses à mi-hauteur, bras armés vers l\u2019arrière. Tu détends à la verticale et tu absorbes la réception genoux fléchis. Réception silencieuse : si ça claque, tu descends trop raide.'
+  },
+  'skater': {
+    svg: '<circle class="hd" cx="78" cy="24" r="7"/><path class="b" d="M78 31 L74 54"/>'
+      + '<path class="b" d="M74 54 L76 74 L76 92"/><path class="b" d="M74 54 L62 68 L52 78"/>'
+      + '<path class="b" d="M78 36 L62 32"/>'
+      + '<path class="traj" d="M22 88 Q48 52 74 88"/>'
+      + '<path class="arr" d="M30 90 L66 90"/>',
+    cap: 'Bond latéral d\u2019un pied sur l\u2019autre. Tu pousses fort sur la jambe d\u2019appui, tu atterris sur l\u2019autre pied seul, jambe libre croisée derrière, et tu stabilises 1 seconde avant de repartir. C\u2019est le geste du padel : impulsion et freinage latéraux.'
+  },
+  'depart': {
+    svg: '<circle class="hd" cx="34" cy="24" r="7"/><path class="b" d="M34 31 L30 52"/>'
+      + '<path class="b" d="M30 52 L38 70 L42 92"/><path class="b" d="M30 52 L22 68 L18 92"/>'
+      + '<path class="b" d="M34 36 L48 44"/>'
+      + '<path class="arr" d="M52 86 L104 86"/>'
+      + '<path class="flr" d="M106 78 L106 92"/>'
+      + '<text x="70" y="80">3 m</text>',
+    cap: 'Position d\u2019attente padel : appuis largeur d\u2019épaules, poids sur l\u2019avant des pieds, buste incliné. Tu déclenches un sprint de 3 m et tu t\u2019arrêtes net. C\u2019est le premier appui qu\u2019on travaille, pas la vitesse de pointe — d\u2019où la distance courte.'
+  },
+  'split-jump': {
+    svg: '<circle class="hd" cx="50" cy="20" r="7"/><path class="b" d="M50 27 L50 52"/>'
+      + '<path class="b" d="M50 52 L66 70 L66 92"/><path class="b" d="M50 52 L38 70 L32 88"/>'
+      + '<path class="b" d="M50 33 L40 44"/><path class="b" d="M50 33 L62 42"/>'
+      + '<path class="arr" d="M92 52 L92 26"/>'
+      + '<path class="traj" d="M84 60 Q92 74 84 84"/>'
+      + '<text x="72" y="94">jambes inversées</text>',
+    cap: 'Départ en fente, genou arrière proche du sol. Tu sautes et tu inverses les jambes en l\u2019air pour atterrir en fente opposée. Le buste reste vertical — pas de balancement vers l\u2019avant.'
+  },
+  'mollets': {
+    svg: '<circle class="hd" cx="48" cy="20" r="7"/><path class="b" d="M48 27 L48 56"/>'
+      + '<path class="b" d="M48 56 L42 74 L44 86"/><path class="b" d="M48 56 L56 74 L58 86"/>'
+      + '<path class="flr" d="M44 86 L50 90"/><path class="flr" d="M58 86 L64 90"/>'
+      + '<path class="traj" d="M36 92 L40 84"/>'
+      + '<path class="arr" d="M84 64 L84 44"/>'
+      + '<text x="18" y="80">talon levé</text>',
+    cap: 'Debout, montée lente sur la pointe des pieds jusqu\u2019en haut, puis descente en 3 secondes. C\u2019est la descente contrôlée qui renforce le tendon d\u2019Achille — la partie qui protège la cheville.'
+  },
+  'bulgare': {
+    svg: '<rect class="anch" x="84" y="68" width="28" height="3"/>'
+      + '<path class="flr" d="M88 71 L88 92"/><path class="flr" d="M108 71 L108 92"/>'
+      + '<circle class="hd" cx="44" cy="20" r="7"/><path class="b" d="M44 27 L46 52"/>'
+      + '<path class="b" d="M46 52 L42 72 L42 92"/><path class="b" d="M46 52 L64 62 L82 68"/>'
+      + '<path class="b" d="M44 33 L36 46"/>'
+      + '<path class="arr" d="M22 50 L22 72"/>',
+    cap: 'Pied arrière posé sur une chaise, pied avant assez loin devant. Tu descends à la verticale jusqu\u2019à ce que la cuisse avant soit parallèle au sol. Le genou avant ne part pas vers l\u2019intérieur — c\u2019est le point à surveiller.'
+  },
+  'planche': {
+    svg: '<circle class="hd" cx="30" cy="56" r="7"/>'
+      + '<path class="b" d="M40 62 L72 70 L94 84"/>'
+      + '<path class="b" d="M40 62 L38 86"/><path class="flr" d="M38 88 L58 88"/>'
+      + '<path class="flr" d="M94 84 L98 92"/>'
+      + '<path class="traj" d="M40 62 L96 88"/>'
+      + '<text x="58" y="60">ligne droite</text>',
+    cap: 'Appui sur les avant-bras, coudes sous les épaules. Épaules, hanches et talons alignés : ni fesses en l\u2019air, ni bas du dos qui creuse. Contracte les fessiers, ça corrige la plupart des cambrures.'
+  },
+  'planche-lat': {
+    svg: '<circle class="hd" cx="28" cy="46" r="7"/>'
+      + '<path class="b" d="M36 52 L66 70 L94 88"/>'
+      + '<path class="b" d="M36 52 L34 84"/><path class="flr" d="M34 86 L54 88"/>'
+      + '<path class="b" d="M36 52 L48 60"/>'
+      + '<path class="traj" d="M36 52 L96 90"/>',
+    cap: 'Sur le côté, coude sous l\u2019épaule, pieds superposés. Les hanches montent jusqu\u2019à former une ligne droite et ne redescendent pas pendant la série. Si le bassin s\u2019affaisse, tu arrêtes le chrono.'
+  },
+  'intervalles': {
+    svg: '<rect class="be" x="12" y="40" width="14" height="40"/>'
+      + '<rect class="br" x="26" y="68" width="26" height="12"/>'
+      + '<rect class="be" x="52" y="40" width="14" height="40"/>'
+      + '<rect class="br" x="66" y="68" width="26" height="12"/>'
+      + '<rect class="be" x="92" y="40" width="14" height="40"/>'
+      + '<path class="flr" d="M8 80 L112 80"/>'
+      + '<text x="10" y="36">20 s</text><text x="32" y="64">40 s récup</text>'
+      + '<text x="8" y="92">× 10 à 12 tours</text>',
+    cap: 'Alternance 20 secondes d\u2019effort maximal et 40 secondes de récupération active, 10 à 12 fois. Corde à sauter, montées de genoux ou vélo. Le format colle au profil du padel : échanges brefs, récup entre les points.'
+  },
+  'pompes': {
+    svg: '<circle class="hd" cx="30" cy="52" r="7"/><path class="b" d="M37 56 L86 68"/>'
+      + '<path class="b" d="M40 57 L34 78 L30 92"/><path class="b" d="M86 68 L92 92"/>'
+      + '<path class="arr" d="M56 46 L56 30"/>',
+    cap: 'Corps gainé en ligne droite des talons à la tête, mains sous les épaules. « max −2 » veut dire : tu t\u2019arrêtes 2 répétitions avant l\u2019échec. Si tu peux en faire 12, tu en fais 10.'
+  }
+};
+const DURATIONS = [
+  {v:30, real:{A:'≈ 29 min', B:'≈ 30 min'}},
+  {v:45, real:{A:'≈ 44 min', B:'≈ 45 min'}},
+  {v:60, real:{A:'≈ 57 min', B:'≈ 61 min'}}
+];
+
+const WEEK_NOTES = {
+  1:'Semaines 1–2 : apprentissage. Élastique léger et <strong>une série en moins</strong> partout — appliqué automatiquement ci-dessous.',
+  3:'Semaines 3–4 : volume complet du format choisi.',
+  5:'Semaines 5–6 : élastique plus résistant sur la force, <strong>+2 reps</strong> sur la pliométrie.',
+  7:'Semaines 7–8 : tempo excentrique lent, <strong>3 s à la descente</strong> sur développé et tirage.',
+  9:'Semaine 9 : décharge à <strong>50 % du volume</strong>, puis on réévalue les repères.'
+};
+function weekNote(w){
+  if(w<=2) return WEEK_NOTES[1];
+  if(w<=4) return WEEK_NOTES[3];
+  if(w<=6) return WEEK_NOTES[5];
+  if(w<=8) return WEEK_NOTES[7];
+  return WEEK_NOTES[9];
+}
+function effSets(base, week){
+  if(!base) return 0;
+  if(week<=2) return Math.max(2, base-1);
+  if(week>=9) return Math.max(1, Math.round(base/2));
+  return base;
+}
+
+let state = {duration:45, session:'A', week:1, checked:{}, logs:{}, history:[], daily:{}};
+
+function flash(msg){
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.classList.add('on');
+  clearTimeout(flash._t);
+  flash._t = setTimeout(()=>el.classList.remove('on'), 1800);
+}
+
+/* ---------- persistance (localStorage) ---------- */
+let storageMode = 'inconnu';
+let storageDetail = '';
+let lastSaved = null;
+
+function hasStorage(){
+  try{
+    const t = '__t'+Date.now();
+    window.localStorage.setItem(t,'1');
+    window.localStorage.removeItem(t);
+    return true;
+  }catch(e){
+    storageDetail = (e && e.name === 'SecurityError')
+      ? 'stockage bloqué par le navigateur (navigation privée ?)'
+      : ((e && e.message) ? String(e.message).slice(0,80) : 'cause inconnue');
+    return false;
+  }
+}
+
+function setStorageBadge(){
+  const el = document.getElementById('storageBadge');
+  if(!el) return;
+  if(storageMode === 'ok'){
+    el.innerHTML = '<span style="color:var(--line)">●</span> Données enregistrées sur cet appareil';
+  } else if(storageMode === 'absent'){
+    el.innerHTML = '<span style="color:var(--warn)">●</span> Stockage indisponible · ' + storageDetail
+      + ' — tes saisies ne survivront pas à la fermeture';
+  } else if(storageMode === 'erreur'){
+    el.innerHTML = '<span style="color:var(--warn)">●</span> Échec d\'écriture · ' + storageDetail;
+  } else {
+    el.innerHTML = '';
+  }
+}
+
+function load(){
+  if(!hasStorage()){ storageMode = 'absent'; render(); return; }
+  try{
+    const raw = window.localStorage.getItem(KEY);
+    if(raw) state = Object.assign(state, JSON.parse(raw));
+    storageMode = 'ok';
+  }catch(e){
+    storageMode = 'ok';   // donnée illisible : on repart d'un état neuf sans bloquer
+  }
+  lastSaved = JSON.stringify(state);
+  render();
+}
+
+let saveT;
+function save(){
+  if(storageMode === 'absent'){ setStorageBadge(); return; }
+  clearTimeout(saveT);
+  saveT = setTimeout(doSave, 400);
+}
+
+function doSave(){
+  const payload = JSON.stringify(state);
+  if(payload === lastSaved) return;
+  try{
+    window.localStorage.setItem(KEY, payload);
+    lastSaved = payload;
+    storageMode = 'ok';
+  }catch(e){
+    storageDetail = (e && e.name === 'QuotaExceededError')
+      ? 'espace de stockage saturé'
+      : ((e && e.message) ? String(e.message).slice(0,80) : 'cause inconnue');
+    storageMode = 'erreur';
+  }
+  setStorageBadge();
+}
+
+/* ---------- export / import ---------- */
+function exportData(){
+  const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'prepa-padel-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+}
+function importData(file){
+  const r = new FileReader();
+  r.onload = ()=>{
+    try{
+      state = Object.assign(state, JSON.parse(r.result));
+      lastSaved = null; doSave(); render();
+      flash('Données importées');
+    }catch(e){ flash('Fichier illisible'); }
+  };
+  r.readAsText(file);
+}
+
+/* ---------- render ---------- */
+function render(){
+  setStorageBadge();
+  const isM = state.session === 'M';
+  document.getElementById('durWrap').style.display = isM ? 'none' : '';
+  document.getElementById('weekWrap').style.display = isM ? 'none' : '';
+  document.getElementById('note').style.display = isM ? 'none' : '';
+  document.querySelector('.actions').style.display = isM ? 'none' : '';
+  // #dataActions reste toujours visible
+  document.getElementById('selSession').value = state.session;
+  if(isM){ renderMobility(); renderHistory(); return; }
+
+  const segDur = document.getElementById('segDur');
+  segDur.innerHTML = DURATIONS.map(d=>
+    `<button data-dur="${d.v}" aria-pressed="${state.duration===d.v}">${d.v} min<span class="sub">${d.real[state.session]}</span></button>`
+  ).join('');
+  segDur.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    state.duration = +b.dataset.dur; save(); render();
+  });
+
+  const selW = document.getElementById('selWeek');
+  if(!selW.options.length){
+    for(let i=1;i<=9;i++){
+      const o=document.createElement('option'); o.value=i; o.textContent='Semaine '+i; selW.appendChild(o);
+    }
+  }
+  selW.value = state.week;
+  document.getElementById('selSession').value = state.session;
+  document.getElementById('note').innerHTML = weekNote(state.week);
+
+  const list = PROGRAM[state.session];
+  const inFormat = list.filter(e=>e.tier<=state.duration);
+  const beyond = list.filter(e=>e.tier>state.duration);
+  const host = document.getElementById('blocs');
+  host.innerHTML = '';
+
+  BLOC_ORDER[state.session].forEach(bloc=>{
+    const items = inFormat.filter(e=>e.bloc===bloc);
+    if(!items.length) return;
+    const sec = document.createElement('section');
+    sec.className = 'bloc';
+    const order = bloc==='Pliométrie' ? 'toujours en premier, jambes fraîches' : '';
+    sec.innerHTML = `<div class="bloc-head"><h2>${bloc}</h2><div class="meta">${order}</div></div>
+      <div class="rail"></div>`;
+    const rail = sec.querySelector('.rail');
+    items.forEach(e=>rail.appendChild(exCard(e,false)));
+    host.appendChild(sec);
+  });
+
+  if(beyond.length){
+    const sec = document.createElement('section');
+    sec.className = 'bloc';
+    sec.innerHTML = `<div class="cut"><span>Au-delà de ${state.duration} min · ${beyond.length} exercice${beyond.length>1?'s':''}</span></div><div class="rail"></div>`;
+    const rail = sec.querySelector('.rail');
+    beyond.forEach(e=>rail.appendChild(exCard(e,true)));
+    host.appendChild(sec);
+  }
+
+  renderHistory();
+}
+
+function exCard(e, isBeyond){
+  const key = state.session+'|'+e.id;
+  const base = e.sets[state.duration] || e.sets[e.tier];
+  const s = isBeyond ? base : effSets(base, state.week);
+  const done = !!state.checked[key];
+  const log = state.logs[key];
+
+  const div = document.createElement('div');
+  div.className = 'ex' + (done?' done':'') + (isBeyond?' beyond':'');
+  div.innerHTML = `
+    <div class="ex-top">
+      <div class="ex-name">${e.name}${e.detail?` <span style="font-family:var(--body);font-size:13px;font-weight:400;color:var(--muted)">${e.detail}</span>`:''}</div>
+      ${isBeyond?'':`<button class="chk" aria-pressed="${done}" aria-label="Marquer comme fait">${done?'✓':''}</button>`}
+    </div>
+    <div class="presc">
+      <span class="pill sets">${s} × ${e.reps}</span>
+      ${e.rest?`<button class="pill rest" data-rest="${e.rest}">repos ${e.rest} s ▸</button>`:''}
+    </div>
+    ${e.note?`<div class="ex-note">${e.note}</div>`:''}
+    ${FIGURES[e.id]?`
+    <button class="figbtn" aria-expanded="false">▸ Position de départ</button>
+    <div class="figbox">
+      ${SVG_HEAD}${FIGURES[e.id].svg}</svg>
+      <div class="figcap">${FIGURES[e.id].cap}</div>
+      <div class="figleg">${figLegend(FIGURES[e.id].svg)}</div>
+    </div>`:''}
+    ${isBeyond?'':`
+    <div class="inputs">
+      <label><div class="ctl-label">Élastique / charge</div>
+        <input type="text" data-f="load" placeholder="ex. rouge ×2" value="${log&&log.load?escapeAttr(log.load):''}"></label>
+      <label><div class="ctl-label">Reps tenues</div>
+        <input type="text" inputmode="numeric" data-f="reps" placeholder="—" value="${log&&log.reps?escapeAttr(log.reps):''}"></label>
+    </div>
+    <div class="last">${log&&log.date?`Dernière fois · <b>${log.load||'—'}</b> · ${log.reps||'—'} reps · ${fmtDate(log.date)}`:'Pas encore de repère enregistré'}</div>`}
+  `;
+
+  const chk = div.querySelector('.chk');
+  if(chk) chk.onclick = ()=>{
+    state.checked[key] = !state.checked[key];
+    save(); render();
+  };
+  const fb = div.querySelector('.figbtn');
+  if(fb) fb.onclick = ()=>{
+    const box = div.querySelector('.figbox');
+    const open = box.classList.toggle('on');
+    fb.setAttribute('aria-expanded', open);
+    fb.textContent = (open?'▾ ':'▸ ') + 'Position de départ';
+  };
+  div.querySelectorAll('.rest').forEach(b=>b.onclick=()=>startRest(+b.dataset.rest, e.name));
+  div.querySelectorAll('input').forEach(inp=>{
+    inp.onchange = ()=>{
+      const cur = state.logs[key] || {};
+      cur[inp.dataset.f] = inp.value.trim();
+      cur.date = new Date().toISOString();
+      state.logs[key] = cur;
+      save();
+      const l = div.querySelector('.last');
+      if(l) l.innerHTML = `Dernière fois · <b>${cur.load||'—'}</b> · ${cur.reps||'—'} reps · ${fmtDate(cur.date)}`;
+    };
+  });
+  return div;
+}
+
+/* ---------- articulations ---------- */
+function todayKey(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function dayKeyFrom(offset){
+  const d = new Date(); d.setDate(d.getDate()-offset);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function streak(){
+  state.daily = state.daily || {};
+  let n = 0;
+  for(let i=0;i<400;i++){
+    if((state.daily[dayKeyFrom(i)]||0) > 0) n++;
+    else if(i>0) break;
+    else continue;
+  }
+  return n;
+}
+function renderMobility(){
+  state.daily = state.daily || {};
+  const today = state.daily[todayKey()] || 0;
+  const host = document.getElementById('blocs');
+  host.innerHTML = '';
+
+  const head = document.createElement('div');
+  head.className = 'dose-head';
+  head.innerHTML = `
+    <div class="ctl-label">Doses du jour · objectif 3</div>
+    <div class="dose-row">
+      ${[1,2,3].map(i=>`<button data-d="${i}" aria-pressed="${today>=i}">${today>=i?'✓ ':''}Dose ${i}</button>`).join('')}
+    </div>
+    <div class="streak">Jours d'affilée · <b>${streak()}</b></div>
+    <div class="warn">
+      <b>Ces exercices entretiennent, ils ne soignent pas.</b> Ils se font sur une articulation qui ne fait pas mal
+      au moment où tu les fais. Une douleur qui dure plusieurs semaines, qui réveille la nuit ou qui gonfle
+      mérite un avis médical — un kiné ou un médecin du sport identifiera si c'est tendineux, articulaire ou
+      lié à ta technique. Ne cherche jamais à passer à travers une douleur vive.
+    </div>`;
+  head.querySelectorAll('.dose-row button').forEach(b=>b.onclick=()=>{
+    const i = +b.dataset.d;
+    state.daily[todayKey()] = (today>=i) ? i-1 : i;
+    save(); render();
+  });
+  host.appendChild(head);
+
+  const intro = document.createElement('div');
+  intro.className = 'note';
+  intro.style.display = '';
+  intro.innerHTML = `Routine de 2 à 3 min, sans matériel, à caser <strong>2 à 3 fois par jour</strong>.
+    Pour les tendons et les articulations, la fréquence bat l'intensité : mieux vaut trois passages courts
+    tous les jours qu'une grosse séance hebdo. Aucun de ces exercices ne fatigue — ils ne perturbent ni ton
+    padel ni tes séances A et B.`;
+  host.appendChild(intro);
+
+  MOB_BLOCS.forEach(bloc=>{
+    const items = MOBILITY.filter(e=>e.bloc===bloc);
+    const sec = document.createElement('section');
+    sec.className = 'bloc';
+    sec.innerHTML = `<div class="bloc-head"><h2>${bloc}</h2><div class="meta">${items.length} exercices</div></div><div class="rail"></div>`;
+    const rail = sec.querySelector('.rail');
+    items.forEach(e=>{
+      const div = document.createElement('div');
+      div.className = 'ex';
+      div.innerHTML = `
+        <div class="ex-top"><div class="ex-name">${e.name}</div></div>
+        <div class="presc"><span class="pill sets">${e.presc}</span></div>
+        <div style="margin-top:8px;font-size:14px">${e.detail}</div>
+        <div class="mob-when">Quand · ${e.when}</div>`;
+      rail.appendChild(div);
+    });
+    host.appendChild(sec);
+  });
+}
+
+function figLegend(svg){
+  const parts = [];
+  if(svg.includes('class="band"')) parts.push('<span><i></i>élastique</span>');
+  if(svg.includes('class="anch"')) parts.push('<span><u></u>appui / ancrage</span>');
+  if(svg.includes('class="arr"')) parts.push('<span>⇢ sens du mouvement</span>');
+  if(svg.includes('class="traj"')) parts.push('<span>┈ trajectoire ou repère</span>');
+  return parts.join('');
+}
+
+function escapeAttr(s){ return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function fmtDate(iso){
+  const d = new Date(iso);
+  return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'});
+}
+
+function renderHistory(){
+  const host = document.getElementById('histList');
+  const h = (state.history||[]).slice(-8).reverse();
+  if(!h.length){ host.innerHTML = '<div class="empty">Termine une séance pour la voir apparaître ici.</div>'; return; }
+  host.innerHTML = h.map(x=>`<div class="hist-row">
+    <span class="d">${fmtDate(x.date)}</span>
+    <span class="s">Séance ${x.session}</span>
+    <span>${x.duration} min · S${x.week}</span>
+    <span style="margin-left:auto">${x.done} exos</span>
+  </div>`).join('');
+}
+
+/* ---------- rest timer ---------- */
+let tInt=null;
+function startRest(sec, label){
+  clearInterval(tInt);
+  const box = document.getElementById('timer');
+  const cnt = document.getElementById('tCount');
+  const bar = document.getElementById('tBar');
+  document.getElementById('tLabel').textContent = 'Repos · ' + label;
+  box.classList.add('on');
+  let left = sec;
+  const tick = ()=>{
+    cnt.textContent = Math.floor(left/60)+':'+String(left%60).padStart(2,'0');
+    bar.style.width = (left/sec*100)+'%';
+    if(left<=0){ clearInterval(tInt); cnt.textContent='0:00'; document.getElementById('tLabel').textContent='Repos terminé — série suivante'; }
+    left--;
+  };
+  tick();
+  tInt = setInterval(tick, 1000);
+}
+document.getElementById('tStop').onclick = ()=>{
+  clearInterval(tInt);
+  document.getElementById('timer').classList.remove('on');
+};
+
+/* ---------- actions ---------- */
+document.getElementById('selSession').onchange = (ev)=>{
+  const v = ev.target.value;
+  if(v !== 'M' && state.session !== 'M') state.checked = {};
+  state.session = v; save(); render();
+};
+document.getElementById('selWeek').onchange = (ev)=>{
+  state.week = +ev.target.value; save(); render();
+};
+document.getElementById('btnReset').onclick = ()=>{
+  state.checked = {}; save(); render();
+};
+document.getElementById('btnFinish').onclick = ()=>{
+  const done = Object.values(state.checked).filter(Boolean).length;
+  if(!done){ flash('Coche au moins un exercice avant de terminer'); return; }
+  state.history = state.history || [];
+  state.history.push({date:new Date().toISOString(), session:state.session, duration:state.duration, week:state.week, done});
+  state.checked = {};
+  save(); render();
+  flash('Séance enregistrée · ' + done + ' exercices');
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+document.getElementById('btnExport').onclick = exportData;
+document.getElementById('btnImport').onclick = ()=>document.getElementById('fileImport').click();
+document.getElementById('fileImport').onchange = (ev)=>{
+  if(ev.target.files && ev.target.files[0]) importData(ev.target.files[0]);
+  ev.target.value = '';
+};
+
+load();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('./sw.js').catch(()=>{ /* hors ligne indisponible, l'app fonctionne quand même */ });
+  });
+}
+</script>
+</body>
+</html>
