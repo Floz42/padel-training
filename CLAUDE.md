@@ -97,6 +97,19 @@ Flo suit les démonstrations vidéo de SmartWorkout, principalement dans leur **
 d'URL publique par exercice : le lien pointe donc vers la **page du groupe musculaire** sur le
 site FR, qui contient les vidéos.
 
+Deux niveaux de lien, en cascade dans `exCard()` :
+
+1. **`swid`** — numéro de leçon dans l'app, concaténé à `SW_LESSON`
+   (`https://smartworkout-pro.passion.io/app/products/115585/lessons/`). C'est le lien direct
+   vers la vidéo de l'exercice. La liste complète des 68 leçons est dans
+   [`SMARTWORKOUT-IDS.md`](SMARTWORKOUT-IDS.md).
+2. **`sw`** — repli si `swid` est absent : la page publique du groupe musculaire.
+
+> **Ces URL ne sont pas vérifiables par script.** L'app est une SPA qui répond `200` sur
+> n'importe quelle URL, y compris une leçon inexistante — un `curl` ne prouve donc rien, à la
+> différence des pages publiques. Seul un clic réel confirme. Vérifier aussi que l'URL contient
+> bien le segment `/lessons/` : l'oublier produit un lien mort qui répond quand même `200`.
+
 Le champ `sw` est un groupe musculaire concaténé à
 `SW_BASE` (`https://smartworkout-pro.com/pages/exercices-elastique-`), et `SW_GROUPS` fournit
 le libellé affiché. Six valeurs possibles, et **aucune autre** :
@@ -116,11 +129,15 @@ Vérification (le site renvoie un vrai 404 sur un slug inconnu) :
 curl -s -o /dev/null -w "%{http_code}" https://smartworkout-pro.com/pages/exercices-elastique-<groupe>
 ```
 
-Cinq exercices n'ont **aucune** page pertinente et n'en auront pas : `squat-jump`, `skater`,
-`depart`, `split-jump`, `intervalles`. SmartWorkout ne filme ni pliométrie ni cardio — c'est
-une marque d'élastiques. L'app affiche « Pas de vidéo SmartWorkout — voir le schéma », et c'est
-précisément le cas où le schéma SVG doit être irréprochable. Ne pas les remplacer par des
-mouvements du catalogue : ce sont les exercices les plus spécifiques du programme.
+**Les noms d'exercices suivent la nomenclature exacte de l'app** (« Développé Debout »,
+« Tirage Horizontal Prise Large », « Fentes Rebonds »…), pour que l'intitulé affiché
+corresponde mot pour mot à la vidéo. Ne pas les franciser autrement ni les reformuler.
+
+Onze exercices n'ont **aucun** équivalent et n'en auront pas : la bibliothèque SmartWorkout ne
+contient ni gainage, ni rotation du tronc, ni pliométrie, ni cardio, ni travail de coiffe des
+rotateurs — c'est une marque d'élastiques. Ils gardent leur intitulé et leur schéma. Ne pas
+leur coller un mouvement approchant du catalogue : la vidéo montrerait autre chose. Le détail
+par exercice est dans [`SMARTWORKOUT-IDS.md`](SMARTWORKOUT-IDS.md).
 
 ### `MOBILITY` — routine articulaire
 
