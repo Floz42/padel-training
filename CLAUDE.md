@@ -87,28 +87,40 @@ de saisie charge/reps, et il ne doit pas avoir de `rest` (l'échauffement s'ench
 
 ### `sw` — correspondance SmartWorkout
 
-Flo suit les démonstrations dans la bibliothèque SmartWorkout. Le champ `sw` est un chemin
-`groupe/slug` concaténé à `SW_BASE` (`https://smartworkout.app/en/exercise-library/`) et rendu
-sous forme de lien « Fiche SmartWorkout ↗ » sur la carte.
+> **Attention au homonyme.** `smartworkout.app` est un tracker d'entraînement générique édité
+> par un tiers, **sans aucun lien** avec la marque française — sa bibliothèque contient des
+> machines Smith et des kettlebells. Le bon site est **`smartworkout-pro.com`**. Ne pas y
+> revenir : cette confusion a déjà coûté un mapping complet à refaire.
 
-**Règle : tout exercice ajouté doit porter un `sw` vérifié.** La bibliothèque renvoie un vrai
-404 sur un slug inconnu, donc la vérification est directe :
+Flo suit les démonstrations vidéo de SmartWorkout, principalement dans leur **app mobile**
+(abonnement, 150+ exercices filmés spécifiques aux élastiques). Cette bibliothèque n'a pas
+d'URL publique par exercice : le lien pointe donc vers la **page du groupe musculaire** sur le
+site FR, qui contient les vidéos.
+
+Le champ `sw` est un groupe musculaire concaténé à
+`SW_BASE` (`https://smartworkout-pro.com/pages/exercices-elastique-`), et `SW_GROUPS` fournit
+le libellé affiché. Six valeurs possibles, et **aucune autre** :
+
+| `sw` | Page |
+|---|---|
+| `pectoraux` | développé couché, haut des pecs, pompes lestées |
+| `dos` | rowing buste penché, soulevé de terre, tirage horizontal, pullover |
+| `epaule` | overhead press, arrière d'épaule, tirage menton, élévations (**singulier**) |
+| `bras` | curl biceps, extensions triceps |
+| `abdos` | routine abdos, gainage |
+| `jambes` | squat, fentes, soulevé de terre, hip thrust, mollets |
+
+Vérification (le site renvoie un vrai 404 sur un slug inconnu) :
 
 ```bash
-curl -s -o /dev/null -w "%{http_code}" https://smartworkout.app/en/exercise-library/<groupe>/<slug>
+curl -s -o /dev/null -w "%{http_code}" https://smartworkout-pro.com/pages/exercices-elastique-<groupe>
 ```
 
-Groupes disponibles : `chest`, `back`, `shoulders`, `legs`, `gluteus`, `biceps`, `triceps`,
-`forearms`, `abs`. La bibliothèque est **en anglais uniquement** (`/fr/` renvoie 404) et couvre
-tout le matériel, pas seulement les élastiques — les mouvements à élastique sont préfixés
-`band-` / `banded-`.
-
-Trois exercices n'ont **aucune** fiche chez eux et n'en auront pas : `skater`, `depart`,
-`split-jump`. C'est de la pliométrie spécifique padel, absente d'une bibliothèque de
-musculation. L'app affiche alors « Pas de fiche SmartWorkout — voir le schéma », et c'est
+Cinq exercices n'ont **aucune** page pertinente et n'en auront pas : `squat-jump`, `skater`,
+`depart`, `split-jump`, `intervalles`. SmartWorkout ne filme ni pliométrie ni cardio — c'est
+une marque d'élastiques. L'app affiche « Pas de vidéo SmartWorkout — voir le schéma », et c'est
 précisément le cas où le schéma SVG doit être irréprochable. Ne pas les remplacer par des
-mouvements de la bibliothèque : ce sont les deux ou trois exercices les plus spécifiques du
-programme.
+mouvements du catalogue : ce sont les exercices les plus spécifiques du programme.
 
 ### `MOBILITY` — routine articulaire
 

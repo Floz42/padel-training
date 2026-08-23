@@ -566,49 +566,50 @@ svg .flr{stroke:var(--ink);stroke-width:2.6;stroke-linecap:round}
 <script>
 const KEY = 'padel-prep-v1';
 
-/* Bibliotheque SmartWorkout : le champ `sw` est un chemin `groupe/slug` verifie (HTTP 200).
-   Absence de `sw` = aucune fiche chez eux, le schema de l'app fait foi. */
-const SW_BASE = 'https://smartworkout.app/en/exercise-library/';
+/* `sw` = groupe musculaire de la page d'exercices SmartWorkout (site FR, videos en francais).
+   Absence de `sw` = pas de page pertinente (pliometrie, cardio) : le schema de l'app fait foi. */
+const SW_BASE = 'https://smartworkout-pro.com/pages/exercices-elastique-';
+const SW_GROUPS = {pectoraux:'pectoraux', dos:'dos', epaule:'épaules', bras:'bras', abdos:'abdos', jambes:'jambes & fessiers'};
 
 const PROGRAM = {
   A: [
-    {bloc:'Échauffement', id:'planche', name:'Planche', detail:'activation', sets:{30:2}, reps:'30 s', tier:30, warm:true, sw:'abs/plank',
+    {bloc:'Échauffement', id:'planche', name:'Planche', detail:'activation', sets:{30:2}, reps:'30 s', tier:30, warm:true, sw:'abdos',
       note:'Activation, pas une série à l’échec : tu t’arrêtes à 30 s même si tu pouvais tenir plus. Un tronc épuisé dès le départ dégrade tout ce qui suit.'},
-    {bloc:'Échauffement', id:'warm-arm-circles', name:'Cercles de bras', sets:{30:1}, reps:'10 avant / 10 arrière', tier:30, warm:true, sw:'shoulders/arm-circles'},
-    {bloc:'Échauffement', id:'warm-pass', name:'Passe-barre épaules élastique', detail:'élastique léger', sets:{30:1}, reps:'10', tier:30, warm:true, sw:'shoulders/band-pass-through-shoulders'},
-    {bloc:'Échauffement', id:'rot-ext', name:'Rotation externe d’épaule', detail:'coiffe des rotateurs', sets:{30:2}, reps:'15 / bras', tier:30, warm:true, sw:'shoulders/seated-shoulder-external-rotation',
+    {bloc:'Échauffement', id:'warm-arm-circles', name:'Cercles de bras', sets:{30:1}, reps:'10 avant / 10 arrière', tier:30, warm:true, sw:'epaule'},
+    {bloc:'Échauffement', id:'warm-pass', name:'Passe-barre épaules élastique', detail:'élastique léger', sets:{30:1}, reps:'10', tier:30, warm:true, sw:'epaule'},
+    {bloc:'Échauffement', id:'rot-ext', name:'Rotation externe d’épaule', detail:'coiffe des rotateurs', sets:{30:2}, reps:'15 / bras', tier:30, warm:true, sw:'epaule',
       note:'Jamais sautée, même en 30 min. C’est ce qui encaisse les smashes répétés.'},
-    {bloc:'Rotation', id:'chop', name:'Chop diagonal élastique', detail:'ancrage haut', sets:{30:2,45:3,60:3}, reps:'10 / côté', rest:60, tier:30, sw:'abs/high-to-low-band-woodchopper',
+    {bloc:'Rotation', id:'chop', name:'Chop diagonal élastique', detail:'ancrage haut', sets:{30:2,45:3,60:3}, reps:'10 / côté', rest:60, tier:30, sw:'abdos',
       note:'Le geste du smash. La puissance part des jambes et passe par le tronc : tu tournes les hanches, tu ne tires pas avec les bras.'},
-    {bloc:'Force', id:'dev-couche', name:'Développé couché élastique', detail:'ancrage porte', sets:{30:3,45:4,60:4}, reps:'8–10', rest:90, tier:30, sw:'chest/band-bench-chest-press'},
-    {bloc:'Force', id:'tirage', name:'Tirage horizontal élastique', detail:'rowing', sets:{30:3,45:4,60:4}, reps:'10–12', rest:90, tier:30, sw:'back/band-high-anchor-wide-row'},
-    {bloc:'Force', id:'pompes', name:'Pompes', detail:'surélevées si besoin', sets:{30:2,45:3,60:3}, reps:'max −2', rest:90, tier:30, sw:'chest/push-up'},
-    {bloc:'Force', id:'dev-mil', name:'Développé militaire élastique', sets:{45:3,60:3}, reps:'10', rest:60, tier:45, sw:'shoulders/band-shoulder-press'},
-    {bloc:'Gainage', id:'planche-lat', name:'Planche latérale', sets:{45:2,60:3}, reps:'30 s / côté', rest:45, tier:45, sw:'abs/side-plank'},
-    {bloc:'Force', id:'face-pull', name:'Face pull élastique', sets:{60:3}, reps:'15', rest:45, tier:60, sw:'shoulders/banded-face-pull'},
-    {bloc:'Force', id:'curl', name:'Curl biceps élastique', sets:{60:2}, reps:'12', rest:45, tier:60, sw:'biceps/band-biceps-curl'},
-    {bloc:'Force', id:'triceps', name:'Extension triceps élastique', detail:'pushdown', sets:{60:2}, reps:'12', rest:45, tier:60, sw:'triceps/band-triceps-pushdown'}
+    {bloc:'Force', id:'dev-couche', name:'Développé pectoraux debout', detail:'ancrage porte · poignées ou barre', sets:{30:3,45:4,60:4}, reps:'8–10', rest:90, tier:30, sw:'pectoraux'},
+    {bloc:'Force', id:'tirage', name:'Tirage horizontal élastique', detail:'rowing', sets:{30:3,45:4,60:4}, reps:'10–12', rest:90, tier:30, sw:'dos'},
+    {bloc:'Force', id:'pompes', name:'Pompes', detail:'surélevées si besoin', sets:{30:2,45:3,60:3}, reps:'max −2', rest:90, tier:30, sw:'pectoraux'},
+    {bloc:'Force', id:'dev-mil', name:'Développé militaire élastique', sets:{45:3,60:3}, reps:'10', rest:60, tier:45, sw:'epaule'},
+    {bloc:'Gainage', id:'planche-lat', name:'Planche latérale', sets:{45:2,60:3}, reps:'30 s / côté', rest:45, tier:45, sw:'abdos'},
+    {bloc:'Force', id:'face-pull', name:'Face pull élastique', sets:{60:3}, reps:'15', rest:45, tier:60, sw:'epaule'},
+    {bloc:'Force', id:'curl', name:'Curl biceps élastique', sets:{60:2}, reps:'12', rest:45, tier:60, sw:'bras'},
+    {bloc:'Force', id:'triceps', name:'Extension triceps élastique', detail:'pushdown', sets:{60:2}, reps:'12', rest:45, tier:60, sw:'bras'}
   ],
   B: [
-    {bloc:'Échauffement', id:'planche', name:'Planche', detail:'activation', sets:{30:2}, reps:'30 s', tier:30, warm:true, sw:'abs/plank',
+    {bloc:'Échauffement', id:'planche', name:'Planche', detail:'activation', sets:{30:2}, reps:'30 s', tier:30, warm:true, sw:'abdos',
       note:'Activation, pas une série à l’échec. Un tronc pré-fatigué encaisse mal les réceptions de pliométrie.'},
-    {bloc:'Échauffement', id:'warm-monster', name:'Marche latérale élastique', detail:'élastique aux chevilles', sets:{30:1}, reps:'20 pas', tier:30, warm:true, sw:'legs/forward-band-monster-walk',
+    {bloc:'Échauffement', id:'warm-monster', name:'Marche latérale élastique', detail:'élastique aux chevilles', sets:{30:1}, reps:'20 pas', tier:30, warm:true, sw:'jambes',
       note:'Réveille les fessiers et la stabilité latérale du genou — exactement ce que la pliométrie va solliciter.'},
-    {bloc:'Échauffement', id:'warm-squat', name:'Squats à vide', sets:{30:1}, reps:'15', tier:30, warm:true, sw:'legs/squat'},
-    {bloc:'Échauffement', id:'warm-lunge', name:'Fente avec rotation', sets:{30:1}, reps:'5 / côté', tier:30, warm:true, sw:'legs/lunge-stretch'},
-    {bloc:'Pliométrie', id:'squat-jump', name:'Squat jumps', sets:{30:3,45:3,60:4}, reps:'6', rest:90, tier:30, sw:'legs/jump-squat'},
+    {bloc:'Échauffement', id:'warm-squat', name:'Squats à vide', sets:{30:1}, reps:'15', tier:30, warm:true, sw:'jambes'},
+    {bloc:'Échauffement', id:'warm-lunge', name:'Fente avec rotation', sets:{30:1}, reps:'5 / côté', tier:30, warm:true, sw:'jambes'},
+    {bloc:'Pliométrie', id:'squat-jump', name:'Squat jumps', sets:{30:3,45:3,60:4}, reps:'6', rest:90, tier:30},
     {bloc:'Pliométrie', id:'skater', name:'Skater jumps', detail:'bonds latéraux', sets:{30:3,45:3,60:4}, reps:'6 / côté', rest:90, tier:30,
       note:'Le plus spécifique padel avec le départ 3 m. Si la réception devient molle, la série est finie.'},
     {bloc:'Pliométrie', id:'depart', name:'Départs explosifs 3 m', sets:{30:5,45:6,60:6}, reps:'1 départ', rest:60, tier:30},
     {bloc:'Pliométrie', id:'split-jump', name:'Split jumps', detail:'fentes sautées', sets:{45:3,60:3}, reps:'8 / jambe', rest:75, tier:45},
-    {bloc:'Rotation', id:'twist', name:'Twist horizontal élastique', detail:'ancrage hauteur poitrine', sets:{45:3,60:3}, reps:'12 / côté', rest:60, tier:45, sw:'abs/band-twist-(horizontal)',
+    {bloc:'Rotation', id:'twist', name:'Twist horizontal élastique', detail:'ancrage hauteur poitrine', sets:{45:3,60:3}, reps:'12 / côté', rest:60, tier:45, sw:'abdos',
       note:'Le geste du coup droit et du revers. Les pieds restent plantés : c’est le buste qui tourne, pas les bras qui tirent.'},
-    {bloc:'Force', id:'squat-elast', name:'Squat élastique', sets:{30:3,45:3,60:3}, reps:'12', rest:60, tier:30, sw:'legs/band-squat'},
-    {bloc:'Force', id:'mollets', name:'Mollets debout', sets:{30:2,45:3,60:3}, reps:'20', rest:45, tier:30, sw:'legs/standing-calf-raise'},
-    {bloc:'Force', id:'sdt', name:'Soulevé de terre roumain élastique', sets:{45:3,60:3}, reps:'12', rest:60, tier:45, sw:'legs/cable-romanian-deadlift'},
-    {bloc:'Gainage', id:'pallof', name:'Pallof press élastique', detail:'anti-rotation', sets:{45:2,60:3}, reps:'12 / côté', rest:45, tier:45, sw:'abs/band-pallof-press'},
-    {bloc:'Force', id:'bulgare', name:'Fente bulgare', detail:'pied arrière sur chaise', sets:{60:3}, reps:'10 / jambe', rest:60, tier:60, sw:'legs/dumbbell-bulgarian-squat'},
-    {bloc:'Cardio', id:'intervalles', name:'Intervalles 20 s / 40 s', sets:{60:1}, reps:'8 min', rest:0, tier:60, sw:'legs/jump-rope'}
+    {bloc:'Force', id:'squat-elast', name:'Squat élastique', sets:{30:3,45:3,60:3}, reps:'12', rest:60, tier:30, sw:'jambes'},
+    {bloc:'Force', id:'mollets', name:'Mollets debout', sets:{30:2,45:3,60:3}, reps:'20', rest:45, tier:30, sw:'jambes'},
+    {bloc:'Force', id:'sdt', name:'Soulevé de terre roumain élastique', sets:{45:3,60:3}, reps:'12', rest:60, tier:45, sw:'jambes'},
+    {bloc:'Gainage', id:'pallof', name:'Pallof press élastique', detail:'anti-rotation', sets:{45:2,60:3}, reps:'12 / côté', rest:45, tier:45, sw:'abdos'},
+    {bloc:'Force', id:'bulgare', name:'Fente bulgare', detail:'pied arrière sur chaise', sets:{60:3}, reps:'10 / jambe', rest:60, tier:60, sw:'jambes'},
+    {bloc:'Cardio', id:'intervalles', name:'Intervalles 20 s / 40 s', sets:{60:1}, reps:'8 min', rest:0, tier:60}
   ]
 };
 
@@ -724,7 +725,7 @@ const FIGURES = {
       + '<rect class="anch" x="6" y="14" width="6" height="60"/>'
       + '<path class="band" d="M12 34 Q28 30 46 41"/>'
       + '<path class="arr" d="M56 40 L78 40"/>',
-    cap: 'Dos à la porte, élastique ancré derrière toi à hauteur de poitrine. Mains devant les pectoraux, coudes fléchis et légèrement sous la ligne des épaules. Tu pousses vers l\u2019avant.'
+    cap: 'Dos à la porte, élastique ancré derrière toi à hauteur de poitrine. Poignées ou barre au choix : la barre impose des mains symétriques, les poignées laissent les poignets tourner librement. Mains devant les pectoraux, coudes fléchis et légèrement sous la ligne des épaules. Tu pousses vers l’avant.'
   },
   'tirage': {
     svg: '<circle class="hd" cx="48" cy="20" r="7"/><path class="b" d="M48 27 L48 58"/>'
@@ -1085,8 +1086,8 @@ function exCard(e, isBeyond){
     </div>
     ${e.note?`<div class="ex-note">${e.note}</div>`:''}
     ${e.sw
-      ? `<a class="swlink" href="${SW_BASE}${e.sw}" target="_blank" rel="noopener noreferrer">Fiche SmartWorkout ↗</a>`
-      : '<div class="swnone">Pas de fiche SmartWorkout — voir le schéma</div>'}
+      ? `<a class="swlink" href="${SW_BASE}${e.sw}" target="_blank" rel="noopener noreferrer">Exercices ${SW_GROUPS[e.sw]} SmartWorkout ↗</a>`
+      : '<div class="swnone">Pas de vidéo SmartWorkout — voir le schéma</div>'}
     ${FIGURES[e.id]?`
     <button class="figbtn" aria-expanded="false">▸ Position de départ</button>
     <div class="figbox">
