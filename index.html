@@ -233,6 +233,15 @@ button.pill.rest{
   font-family:var(--data);
 }
 button.pill.rest:focus-visible{outline:3px solid var(--ball);outline-offset:2px}
+button.pill.work{
+  border:2px solid var(--ink);
+  background:var(--ball);
+  color:var(--ink);
+  cursor:pointer;
+  font-family:var(--data);
+  font-weight:600;
+}
+button.pill.work:focus-visible{outline:3px solid var(--line);outline-offset:2px}
 
 .ex-note{
   margin-top:8px;
@@ -412,6 +421,29 @@ button.pill.rest:focus-visible{outline:3px solid var(--ball);outline-offset:2px}
   margin-top:6px;
 }
 
+/* ---------- lien fiche SmartWorkout ---------- */
+.swlink{
+  display:inline-block;
+  margin-top:9px;
+  font-family:var(--data);
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--line);
+  text-decoration:none;
+  border-bottom:2px solid var(--rail);
+  padding:2px 0;
+}
+.swlink:focus-visible{outline:3px solid var(--line);outline-offset:3px}
+.swnone{
+  margin-top:9px;
+  font-family:var(--data);
+  font-size:10px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
 /* ---------- schémas position de départ ---------- */
 .figbtn{
   margin-top:9px;
@@ -534,35 +566,61 @@ svg .flr{stroke:var(--ink);stroke-width:2.6;stroke-linecap:round}
 <script>
 const KEY = 'padel-prep-v1';
 
+/* Bibliotheque SmartWorkout : le champ `sw` est un chemin `groupe/slug` verifie (HTTP 200).
+   Absence de `sw` = aucune fiche chez eux, le schema de l'app fait foi. */
+const SW_BASE = 'https://smartworkout.app/en/exercise-library/';
+
 const PROGRAM = {
   A: [
-    {bloc:'Force', id:'dev-couche', name:'Développé couché élastique', detail:'ancrage porte', sets:{30:3,45:4,60:4}, reps:'8–10', rest:90, tier:30},
-    {bloc:'Force', id:'tirage', name:'Tirage horizontal élastique', detail:'rowing', sets:{30:3,45:4,60:4}, reps:'10–12', rest:90, tier:30},
-    {bloc:'Force', id:'pompes', name:'Pompes', detail:'surélevées si besoin', sets:{30:2,45:3,60:3}, reps:'max −2', rest:90, tier:30},
-    {bloc:'Force', id:'rot-ext', name:'Rotation externe d\u2019épaule', detail:'coiffe des rotateurs', sets:{30:2,45:3,60:3}, reps:'15 / bras', rest:45, tier:30,
-      note:'Reste dans le noyau même en 30 min. C\u2019est ce qui encaisse les smashes répétés.'},
-    {bloc:'Gainage', id:'planche', name:'Planche', sets:{30:2,45:3,60:3}, reps:'40 s', rest:45, tier:30},
-    {bloc:'Force', id:'dev-mil', name:'Développé militaire élastique', sets:{45:3,60:3}, reps:'10', rest:60, tier:45},
-    {bloc:'Gainage', id:'planche-lat', name:'Planche latérale', sets:{45:2,60:3}, reps:'30 s / côté', rest:45, tier:45},
-    {bloc:'Force', id:'face-pull', name:'Face pull élastique', sets:{60:3}, reps:'15', rest:45, tier:60},
-    {bloc:'Force', id:'bras', name:'Curl + extension triceps', sets:{60:2}, reps:'12 chacun', rest:45, tier:60}
+    {bloc:'Échauffement', id:'planche', name:'Planche', detail:'activation', sets:{30:2}, reps:'30 s', tier:30, warm:true, sw:'abs/plank',
+      note:'Activation, pas une série à l’échec : tu t’arrêtes à 30 s même si tu pouvais tenir plus. Un tronc épuisé dès le départ dégrade tout ce qui suit.'},
+    {bloc:'Échauffement', id:'warm-arm-circles', name:'Cercles de bras', sets:{30:1}, reps:'10 avant / 10 arrière', tier:30, warm:true, sw:'shoulders/arm-circles'},
+    {bloc:'Échauffement', id:'warm-pass', name:'Passe-barre épaules élastique', detail:'élastique léger', sets:{30:1}, reps:'10', tier:30, warm:true, sw:'shoulders/band-pass-through-shoulders'},
+    {bloc:'Échauffement', id:'rot-ext', name:'Rotation externe d’épaule', detail:'coiffe des rotateurs', sets:{30:2}, reps:'15 / bras', tier:30, warm:true, sw:'shoulders/seated-shoulder-external-rotation',
+      note:'Jamais sautée, même en 30 min. C’est ce qui encaisse les smashes répétés.'},
+    {bloc:'Rotation', id:'chop', name:'Chop diagonal élastique', detail:'ancrage haut', sets:{30:2,45:3,60:3}, reps:'10 / côté', rest:60, tier:30, sw:'abs/high-to-low-band-woodchopper',
+      note:'Le geste du smash. La puissance part des jambes et passe par le tronc : tu tournes les hanches, tu ne tires pas avec les bras.'},
+    {bloc:'Force', id:'dev-couche', name:'Développé couché élastique', detail:'ancrage porte', sets:{30:3,45:4,60:4}, reps:'8–10', rest:90, tier:30, sw:'chest/band-bench-chest-press'},
+    {bloc:'Force', id:'tirage', name:'Tirage horizontal élastique', detail:'rowing', sets:{30:3,45:4,60:4}, reps:'10–12', rest:90, tier:30, sw:'back/band-high-anchor-wide-row'},
+    {bloc:'Force', id:'pompes', name:'Pompes', detail:'surélevées si besoin', sets:{30:2,45:3,60:3}, reps:'max −2', rest:90, tier:30, sw:'chest/push-up'},
+    {bloc:'Force', id:'dev-mil', name:'Développé militaire élastique', sets:{45:3,60:3}, reps:'10', rest:60, tier:45, sw:'shoulders/band-shoulder-press'},
+    {bloc:'Gainage', id:'planche-lat', name:'Planche latérale', sets:{45:2,60:3}, reps:'30 s / côté', rest:45, tier:45, sw:'abs/side-plank'},
+    {bloc:'Force', id:'face-pull', name:'Face pull élastique', sets:{60:3}, reps:'15', rest:45, tier:60, sw:'shoulders/banded-face-pull'},
+    {bloc:'Force', id:'curl', name:'Curl biceps élastique', sets:{60:2}, reps:'12', rest:45, tier:60, sw:'biceps/band-biceps-curl'},
+    {bloc:'Force', id:'triceps', name:'Extension triceps élastique', detail:'pushdown', sets:{60:2}, reps:'12', rest:45, tier:60, sw:'triceps/band-triceps-pushdown'}
   ],
   B: [
-    {bloc:'Pliométrie', id:'squat-jump', name:'Squat jumps', sets:{30:3,45:3,60:4}, reps:'6', rest:90, tier:30},
+    {bloc:'Échauffement', id:'planche', name:'Planche', detail:'activation', sets:{30:2}, reps:'30 s', tier:30, warm:true, sw:'abs/plank',
+      note:'Activation, pas une série à l’échec. Un tronc pré-fatigué encaisse mal les réceptions de pliométrie.'},
+    {bloc:'Échauffement', id:'warm-monster', name:'Marche latérale élastique', detail:'élastique aux chevilles', sets:{30:1}, reps:'20 pas', tier:30, warm:true, sw:'legs/forward-band-monster-walk',
+      note:'Réveille les fessiers et la stabilité latérale du genou — exactement ce que la pliométrie va solliciter.'},
+    {bloc:'Échauffement', id:'warm-squat', name:'Squats à vide', sets:{30:1}, reps:'15', tier:30, warm:true, sw:'legs/squat'},
+    {bloc:'Échauffement', id:'warm-lunge', name:'Fente avec rotation', sets:{30:1}, reps:'5 / côté', tier:30, warm:true, sw:'legs/lunge-stretch'},
+    {bloc:'Pliométrie', id:'squat-jump', name:'Squat jumps', sets:{30:3,45:3,60:4}, reps:'6', rest:90, tier:30, sw:'legs/jump-squat'},
     {bloc:'Pliométrie', id:'skater', name:'Skater jumps', detail:'bonds latéraux', sets:{30:3,45:3,60:4}, reps:'6 / côté', rest:90, tier:30,
       note:'Le plus spécifique padel avec le départ 3 m. Si la réception devient molle, la série est finie.'},
     {bloc:'Pliométrie', id:'depart', name:'Départs explosifs 3 m', sets:{30:5,45:6,60:6}, reps:'1 départ', rest:60, tier:30},
     {bloc:'Pliométrie', id:'split-jump', name:'Split jumps', detail:'fentes sautées', sets:{45:3,60:3}, reps:'8 / jambe', rest:75, tier:45},
-    {bloc:'Force', id:'squat-elast', name:'Squat élastique', sets:{30:3,45:3,60:3}, reps:'12', rest:60, tier:30},
-    {bloc:'Force', id:'mollets', name:'Mollets debout', sets:{30:2,45:3,60:3}, reps:'20', rest:45, tier:30},
-    {bloc:'Force', id:'sdt', name:'Soulevé de terre roumain élastique', sets:{45:3,60:3}, reps:'12', rest:60, tier:45},
-    {bloc:'Gainage', id:'pallof', name:'Pallof press élastique', detail:'anti-rotation', sets:{45:2,60:3}, reps:'12 / côté', rest:45, tier:45},
-    {bloc:'Force', id:'bulgare', name:'Fente bulgare', detail:'pied arrière sur chaise', sets:{60:3}, reps:'10 / jambe', rest:60, tier:60},
-    {bloc:'Cardio', id:'intervalles', name:'Intervalles 20 s / 40 s', sets:{60:1}, reps:'8 min', rest:0, tier:60}
+    {bloc:'Rotation', id:'twist', name:'Twist horizontal élastique', detail:'ancrage hauteur poitrine', sets:{45:3,60:3}, reps:'12 / côté', rest:60, tier:45, sw:'abs/band-twist-(horizontal)',
+      note:'Le geste du coup droit et du revers. Les pieds restent plantés : c’est le buste qui tourne, pas les bras qui tirent.'},
+    {bloc:'Force', id:'squat-elast', name:'Squat élastique', sets:{30:3,45:3,60:3}, reps:'12', rest:60, tier:30, sw:'legs/band-squat'},
+    {bloc:'Force', id:'mollets', name:'Mollets debout', sets:{30:2,45:3,60:3}, reps:'20', rest:45, tier:30, sw:'legs/standing-calf-raise'},
+    {bloc:'Force', id:'sdt', name:'Soulevé de terre roumain élastique', sets:{45:3,60:3}, reps:'12', rest:60, tier:45, sw:'legs/cable-romanian-deadlift'},
+    {bloc:'Gainage', id:'pallof', name:'Pallof press élastique', detail:'anti-rotation', sets:{45:2,60:3}, reps:'12 / côté', rest:45, tier:45, sw:'abs/band-pallof-press'},
+    {bloc:'Force', id:'bulgare', name:'Fente bulgare', detail:'pied arrière sur chaise', sets:{60:3}, reps:'10 / jambe', rest:60, tier:60, sw:'legs/dumbbell-bulgarian-squat'},
+    {bloc:'Cardio', id:'intervalles', name:'Intervalles 20 s / 40 s', sets:{60:1}, reps:'8 min', rest:0, tier:60, sw:'legs/jump-rope'}
   ]
 };
 
-const BLOC_ORDER = {A:['Force','Gainage'], B:['Pliométrie','Force','Gainage','Cardio']};
+const BLOC_ORDER = {
+  A:['Échauffement','Rotation','Force','Gainage'],
+  B:['Échauffement','Pliométrie','Rotation','Force','Gainage','Cardio']
+};
+const BLOC_META = {
+  'Échauffement':'2 à 3 min, avant tout le reste',
+  'Rotation':'le geste du padel — à faire frais',
+  'Pliométrie':'toujours en premier, jambes fraîches'
+};
 
 const MOBILITY = [
   {bloc:'Poignets', name:'Ouverture / fermeture de poing', presc:'20 reps', when:'assis au bureau, entre deux compils',
@@ -602,6 +660,64 @@ const FRONT = '<circle class="hd" cx="60" cy="18" r="7"/><path class="b" d="M60 
   + '<path class="b" d="M60 56 L50 76 L48 92"/><path class="b" d="M60 56 L70 76 L72 92"/>';
 
 const FIGURES = {
+  'warm-arm-circles': {
+    svg: FRONT
+      + '<path class="b" d="M60 31 L40 26"/><path class="b" d="M60 31 L80 26"/>'
+      + '<circle class="traj" cx="32" cy="26" r="10"/>'
+      + '<circle class="traj" cx="88" cy="26" r="10"/>'
+      + '<path class="arr" d="M26 17 Q34 14 40 20"/>',
+    cap: 'Debout, bras tendus sur les côtés à hauteur d’épaules. Dix cercles vers l’avant, dix vers l’arrière, en augmentant l’amplitude au fil des reps. C’est la toute première chose que tu fais, avant même de toucher un élastique.'
+  },
+  'warm-pass': {
+    svg: FRONT
+      + '<path class="b" d="M60 29 L36 14"/><path class="b" d="M60 29 L84 14"/>'
+      + '<path class="band" d="M36 14 Q60 5 84 14"/>'
+      + '<path class="arr" d="M96 20 Q104 32 96 44"/>',
+    cap: 'Élastique tenu à deux mains, bras tendus, mains beaucoup plus larges que les épaules. Tu passes lentement l’élastique de l’avant vers l’arrière au-dessus de la tête, sans jamais plier les coudes. Si ça bloque, écarte les mains — jamais forcer.'
+  },
+  'warm-monster': {
+    svg: FRONT
+      + '<path class="band" d="M48 88 Q60 82 72 88"/>'
+      + '<path class="arr" d="M84 80 L108 80"/>'
+      + '<text x="6" y="50">demi-squat</text>',
+    cap: 'Élastique autour des chevilles, pieds écartés largeur de bassin, léger demi-squat. Tu avances par pas latéraux en gardant la tension sur l’élastique. Les genoux ne rentrent jamais vers l’intérieur — c’est tout l’intérêt du mouvement.'
+  },
+  'warm-lunge': {
+    svg: '<circle class="hd" cx="50" cy="20" r="7"/><path class="b" d="M50 27 L50 52"/>'
+      + '<path class="b" d="M50 52 L70 68 L70 92"/>'
+      + '<path class="b" d="M50 52 L34 74 L28 92"/>'
+      + '<path class="b" d="M50 33 L68 30"/>'
+      + '<path class="arr" d="M74 26 Q90 30 94 44"/>'
+      + '<text x="4" y="44">genou bas</text>',
+    cap: 'Grande fente avant, genou arrière proche du sol, buste vertical. Une fois en position, tu fais pivoter le buste du côté de la jambe avant, bras tendu. Ça ouvre la hanche et le tronc d’un coup — les deux zones que la séance va solliciter.'
+  },
+  'chop': {
+    svg: FRONT
+      + '<path class="b" d="M60 31 L44 18"/>'
+      + '<rect class="anch" x="6" y="4" width="6" height="26"/>'
+      + '<path class="band" d="M12 14 L44 18"/>'
+      + '<path class="arr" d="M50 32 Q68 52 82 70"/>'
+      + '<text x="84" y="80">hanche</text>',
+    cap: 'Élastique ancré en hauteur, sur le côté. Tu attrapes la poignée à deux mains en haut, bras tendus, et tu tires en diagonale vers la hanche opposée en faisant pivoter les hanches et le pied arrière. Le geste finit bas et loin, exactement comme un smash accompagné.'
+  },
+  'twist': {
+    svg: FRONT
+      + '<path class="b" d="M60 31 L44 36"/>'
+      + '<rect class="anch" x="6" y="22" width="6" height="28"/>'
+      + '<path class="band" d="M12 36 L44 36"/>'
+      + '<path class="arr" d="M66 36 Q88 40 96 56"/>'
+      + '<path class="traj" d="M46 58 L74 58"/>'
+      + '<text x="78" y="61">fixe</text>',
+    cap: 'Élastique ancré sur le côté à hauteur de poitrine. Mains jointes, bras tendus devant le sternum, pieds plantés largeur d’épaules. Tu fais pivoter le buste à l’opposé de l’ancrage sans plier les bras. Le bassin, lui, ne bouge pas : c’est le tronc qui travaille.'
+  },
+  'triceps': {
+    svg: FRONT
+      + '<path class="b" d="M60 31 L54 44 L56 58"/><path class="b" d="M60 31 L66 44 L64 58"/>'
+      + '<rect class="anch" x="108" y="8" width="6" height="26"/>'
+      + '<path class="band" d="M108 20 Q86 32 66 44"/>'
+      + '<path class="arr" d="M78 52 L78 72"/>',
+    cap: 'Élastique ancré au-dessus de la tête. Coudes collés aux côtes et fixes : seuls les avant-bras descendent, jusqu’à extension complète. Si les coudes partent vers l’avant, l’élastique est trop résistant.'
+  },
   'dev-couche': {
     svg: SIDE
       + '<path class="b" d="M48 33 L36 40 L46 41"/>'
@@ -635,7 +751,7 @@ const FIGURES = {
       + '<path class="arr" d="M80 34 L54 34"/>',
     cap: 'Élastique ancré haut, au-dessus de la tête. Bras tendus vers l\u2019avant au départ. Tu tires vers le front en écartant les coudes, mains qui finissent au niveau des tempes.'
   },
-  'bras': {
+  'curl': {
     svg: FRONT
       + '<path class="b" d="M60 31 L52 46 L52 58"/><path class="b" d="M60 31 L68 46 L68 58"/>'
       + '<path class="band" d="M48 92 Q48 74 52 58"/><path class="band" d="M72 92 Q72 74 68 58"/>'
@@ -702,7 +818,7 @@ const FIGURES = {
       + '<path class="b" d="M50 33 L40 44"/><path class="b" d="M50 33 L62 42"/>'
       + '<path class="arr" d="M92 52 L92 26"/>'
       + '<path class="traj" d="M84 60 Q92 74 84 84"/>'
-      + '<text x="72" y="94">jambes inversées</text>',
+      + '<text x="4" y="12">jambes inversées</text>',
     cap: 'Départ en fente, genou arrière proche du sol. Tu sautes et tu inverses les jambes en l\u2019air pour atterrir en fente opposée. Le buste reste vertical — pas de balancement vers l\u2019avant.'
   },
   'mollets': {
@@ -759,9 +875,9 @@ const FIGURES = {
   }
 };
 const DURATIONS = [
-  {v:30, real:{A:'≈ 29 min', B:'≈ 30 min'}},
-  {v:45, real:{A:'≈ 44 min', B:'≈ 45 min'}},
-  {v:60, real:{A:'≈ 57 min', B:'≈ 61 min'}}
+  {v:30, real:{A:'≈ 32 min', B:'≈ 33 min'}},
+  {v:45, real:{A:'≈ 45 min', B:'≈ 54 min'}},
+  {v:60, real:{A:'≈ 60 min', B:'≈ 70 min'}}
 ];
 
 const WEEK_NOTES = {
@@ -927,7 +1043,7 @@ function render(){
     if(!items.length) return;
     const sec = document.createElement('section');
     sec.className = 'bloc';
-    const order = bloc==='Pliométrie' ? 'toujours en premier, jambes fraîches' : '';
+    const order = BLOC_META[bloc] || '';
     sec.innerHTML = `<div class="bloc-head"><h2>${bloc}</h2><div class="meta">${order}</div></div>
       <div class="rail"></div>`;
     const rail = sec.querySelector('.rail');
@@ -950,7 +1066,8 @@ function render(){
 function exCard(e, isBeyond){
   const key = state.session+'|'+e.id;
   const base = e.sets[state.duration] || e.sets[e.tier];
-  const s = isBeyond ? base : effSets(base, state.week);
+  // l'échauffement garde son volume tel quel : ni allégé en semaine 1-2, ni réduit en décharge
+  const s = (isBeyond || e.warm) ? base : effSets(base, state.week);
   const done = !!state.checked[key];
   const log = state.logs[key];
 
@@ -963,9 +1080,13 @@ function exCard(e, isBeyond){
     </div>
     <div class="presc">
       <span class="pill sets">${s} × ${e.reps}</span>
+      ${workSecs(e.reps)?`<button class="pill work" data-work="${workSecs(e.reps)}">chrono ${workSecs(e.reps)} s ▸</button>`:''}
       ${e.rest?`<button class="pill rest" data-rest="${e.rest}">repos ${e.rest} s ▸</button>`:''}
     </div>
     ${e.note?`<div class="ex-note">${e.note}</div>`:''}
+    ${e.sw
+      ? `<a class="swlink" href="${SW_BASE}${e.sw}" target="_blank" rel="noopener noreferrer">Fiche SmartWorkout ↗</a>`
+      : '<div class="swnone">Pas de fiche SmartWorkout — voir le schéma</div>'}
     ${FIGURES[e.id]?`
     <button class="figbtn" aria-expanded="false">▸ Position de départ</button>
     <div class="figbox">
@@ -973,7 +1094,7 @@ function exCard(e, isBeyond){
       <div class="figcap">${FIGURES[e.id].cap}</div>
       <div class="figleg">${figLegend(FIGURES[e.id].svg)}</div>
     </div>`:''}
-    ${isBeyond?'':`
+    ${(isBeyond||e.warm)?'':`
     <div class="inputs">
       <label><div class="ctl-label">Élastique / charge</div>
         <input type="text" data-f="load" placeholder="ex. rouge ×2" value="${log&&log.load?escapeAttr(log.load):''}"></label>
@@ -996,6 +1117,7 @@ function exCard(e, isBeyond){
     fb.textContent = (open?'▾ ':'▸ ') + 'Position de départ';
   };
   div.querySelectorAll('.rest').forEach(b=>b.onclick=()=>startRest(+b.dataset.rest, e.name));
+  div.querySelectorAll('.work').forEach(b=>b.onclick=()=>startWork(+b.dataset.work, e.name));
   div.querySelectorAll('input').forEach(inp=>{
     inp.onchange = ()=>{
       const cur = state.logs[key] || {};
@@ -1094,6 +1216,15 @@ function figLegend(svg){
   return parts.join('');
 }
 
+/**
+ * Duree d'une serie chronometree, en secondes ('40 s', '30 s / côté' -> 30).
+ * Renvoie 0 pour une prescription en repetitions, qui n'a pas de chrono.
+ */
+function workSecs(reps){
+  const m = String(reps).match(/^(\d+)\s*s(\s|$)/);
+  return m ? +m[1] : 0;
+}
+
 function escapeAttr(s){ return String(s).replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 function fmtDate(iso){
   const d = new Date(iso);
@@ -1113,26 +1244,89 @@ function renderHistory(){
 }
 
 /* ---------- rest timer ---------- */
-let tInt=null;
-function startRest(sec, label){
+let tInt = null, tEnd = 0, wakeLock = null, actx = null;
+
+/**
+ * Garde l'ecran allume pendant un decompte. Le verrou saute des que la page
+ * passe en arriere-plan : il est repris par le listener visibilitychange.
+ */
+async function keepAwake(){
+  try{
+    if('wakeLock' in navigator && !wakeLock){
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', ()=>{ wakeLock = null; });
+    }
+  }catch(e){ /* refuse ou non supporte : le decompte fonctionne quand meme */ }
+}
+function releaseAwake(){
+  try{ if(wakeLock){ wakeLock.release(); wakeLock = null; } }catch(e){}
+}
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState === 'visible' && tInt) keepAwake();
+});
+
+/** Prepare le contexte audio pendant le geste utilisateur (sinon il reste suspendu). */
+function ensureAudio(){
+  try{
+    const C = window.AudioContext || window.webkitAudioContext;
+    if(!C) return;
+    if(!actx) actx = new C();
+    if(actx.state === 'suspended') actx.resume();
+  }catch(e){}
+}
+function endSignal(){
+  try{ if(navigator.vibrate) navigator.vibrate([200,100,200]); }catch(e){}
+  try{
+    if(!actx) return;
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.frequency.value = 880;
+    o.connect(g); g.connect(actx.destination);
+    g.gain.setValueAtTime(0.0001, actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.25, actx.currentTime + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + 0.6);
+    o.start(); o.stop(actx.currentTime + 0.6);
+  }catch(e){}
+}
+
+/**
+ * Decompte unique pour le repos et les exercices chronometres.
+ * L'echeance est une date absolue : l'affichage reste juste meme si le
+ * navigateur bride les timers en arriere-plan.
+ * @param {number} sec duree en secondes
+ * @param {string} label nom de l'exercice
+ * @param {'rest'|'work'} kind
+ */
+function startTimer(sec, label, kind){
   clearInterval(tInt);
+  ensureAudio();
   const box = document.getElementById('timer');
   const cnt = document.getElementById('tCount');
   const bar = document.getElementById('tBar');
-  document.getElementById('tLabel').textContent = 'Repos · ' + label;
+  document.getElementById('tLabel').textContent = (kind === 'work' ? '' : 'Repos · ') + label;
   box.classList.add('on');
-  let left = sec;
+  keepAwake();
+  tEnd = Date.now() + sec * 1000;
   const tick = ()=>{
-    cnt.textContent = Math.floor(left/60)+':'+String(left%60).padStart(2,'0');
-    bar.style.width = (left/sec*100)+'%';
-    if(left<=0){ clearInterval(tInt); cnt.textContent='0:00'; document.getElementById('tLabel').textContent='Repos terminé — série suivante'; }
-    left--;
+    const left = Math.max(0, Math.round((tEnd - Date.now()) / 1000));
+    cnt.textContent = Math.floor(left/60) + ':' + String(left%60).padStart(2,'0');
+    bar.style.width = (left / sec * 100) + '%';
+    if(left <= 0){
+      clearInterval(tInt); tInt = null;
+      document.getElementById('tLabel').textContent =
+        kind === 'work' ? 'Série terminée — repos' : 'Repos terminé — série suivante';
+      endSignal();
+      releaseAwake();
+    }
   };
   tick();
-  tInt = setInterval(tick, 1000);
+  tInt = setInterval(tick, 250);
 }
+const startRest = (sec, label)=> startTimer(sec, label, 'rest');
+const startWork = (sec, label)=> startTimer(sec, label, 'work');
+
 document.getElementById('tStop').onclick = ()=>{
-  clearInterval(tInt);
+  clearInterval(tInt); tInt = null;
+  releaseAwake();
   document.getElementById('timer').classList.remove('on');
 };
 
