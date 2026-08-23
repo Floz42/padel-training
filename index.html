@@ -569,6 +569,7 @@ const KEY = 'padel-prep-v1';
 /* `sw` = groupe musculaire de la page d'exercices SmartWorkout (site FR, videos en francais).
    Absence de `sw` = pas de page pertinente (pliometrie, cardio) : le schema de l'app fait foi. */
 const SW_BASE = 'https://smartworkout-pro.com/pages/exercices-elastique-';
+const SW_LESSON = 'https://smartworkout-pro.passion.io/app/products/115585/lessons/';
 const SW_GROUPS = {pectoraux:'pectoraux', dos:'dos', epaule:'épaules', bras:'bras', abdos:'abdos', jambes:'jambes & fessiers'};
 
 const PROGRAM = {
@@ -581,34 +582,36 @@ const PROGRAM = {
       note:'Jamais sautée, même en 30 min. C’est ce qui encaisse les smashes répétés.'},
     {bloc:'Rotation', id:'chop', name:'Chop diagonal élastique', detail:'ancrage haut', sets:{30:2,45:3,60:3}, reps:'10 / côté', rest:60, tier:30, sw:'abdos',
       note:'Le geste du smash. La puissance part des jambes et passe par le tronc : tu tournes les hanches, tu ne tires pas avec les bras.'},
-    {bloc:'Force', id:'dev-couche', name:'Développé pectoraux debout', detail:'ancrage porte · poignées ou barre', sets:{30:3,45:4,60:4}, reps:'8–10', rest:90, tier:30, sw:'pectoraux'},
-    {bloc:'Force', id:'tirage', name:'Tirage horizontal élastique', detail:'rowing', sets:{30:3,45:4,60:4}, reps:'10–12', rest:90, tier:30, sw:'dos'},
-    {bloc:'Force', id:'pompes', name:'Pompes', detail:'surélevées si besoin', sets:{30:2,45:3,60:3}, reps:'max −2', rest:90, tier:30, sw:'pectoraux'},
-    {bloc:'Force', id:'dev-mil', name:'Développé militaire élastique', sets:{45:3,60:3}, reps:'10', rest:60, tier:45, sw:'epaule'},
+    {bloc:'Force', id:'dev-couche', name:'Développé Debout', detail:'ancrage porte · poignées ou barre', sets:{30:3,45:4,60:4}, reps:'8–10', rest:90, tier:30, swid:'1963663', sw:'pectoraux'},
+    {bloc:'Force', id:'tirage', name:'Tirage Horizontal Prise Large', detail:'ancrage hauteur nombril', sets:{30:3,45:4,60:4}, reps:'10–12', rest:90, tier:30, swid:'1963501', sw:'dos'},
+    {bloc:'Force', id:'ecarte', name:'Écarté Poulie Haute', detail:'ancrage haut · poignées', sets:{30:2,45:3,60:3}, reps:'12–15', rest:60, tier:30, swid:'1963667', sw:'pectoraux',
+      note:'Remplace les pompes : les poignées gardent le poignet dans l’axe, sans l’écrasement de l’appui au sol. Coudes légèrement fléchis et figés — c’est l’épaule qui ouvre et ferme, jamais le coude.'},
+    {bloc:'Force', id:'dev-mil', name:'Développé Militaire Assis', detail:'assis, élastique sous les pieds', sets:{45:3,60:3}, reps:'10', rest:60, tier:45, swid:'1962143', sw:'epaule',
+      note:'Assis, tu ne peux pas compenser en cambrant le bas du dos — c’est tout l’intérêt par rapport au debout. Si tu dois te pencher en arrière pour finir la rep, l’élastique est trop résistant.'},
     {bloc:'Gainage', id:'planche-lat', name:'Planche latérale', sets:{45:2,60:3}, reps:'30 s / côté', rest:45, tier:45, sw:'abdos'},
-    {bloc:'Force', id:'face-pull', name:'Face pull élastique', sets:{60:3}, reps:'15', rest:45, tier:60, sw:'epaule'},
-    {bloc:'Force', id:'curl', name:'Curl biceps élastique', sets:{60:2}, reps:'12', rest:45, tier:60, sw:'bras'},
-    {bloc:'Force', id:'triceps', name:'Extension triceps élastique', detail:'pushdown', sets:{60:2}, reps:'12', rest:45, tier:60, sw:'bras'}
+    {bloc:'Force', id:'face-pull', name:'Face Pull', detail:'ancrage au-dessus de la tête', sets:{60:3}, reps:'15', rest:45, tier:60, swid:'1962142', sw:'epaule'},
+    {bloc:'Force', id:'curl', name:'Biceps Curl', detail:'coudes collés aux côtes', sets:{60:2}, reps:'12', rest:45, tier:60, swid:'1961995', sw:'bras'},
+    {bloc:'Force', id:'triceps', name:'Triceps Extension Poulie Haute', detail:'coudes fixes', sets:{60:2}, reps:'12', rest:45, tier:60, swid:'1961565', sw:'bras'}
   ],
   B: [
     {bloc:'Échauffement', id:'planche', name:'Planche', detail:'activation', sets:{30:2}, reps:'30 s', tier:30, warm:true, sw:'abdos',
       note:'Activation, pas une série à l’échec. Un tronc pré-fatigué encaisse mal les réceptions de pliométrie.'},
-    {bloc:'Échauffement', id:'warm-monster', name:'Marche latérale élastique', detail:'élastique aux chevilles', sets:{30:1}, reps:'20 pas', tier:30, warm:true, sw:'jambes',
+    {bloc:'Échauffement', id:'warm-monster', name:'Abduction', detail:'élastique aux chevilles, pas latéraux', sets:{30:1}, reps:'20 pas', tier:30, warm:true, swid:'1961935', sw:'jambes',
       note:'Réveille les fessiers et la stabilité latérale du genou — exactement ce que la pliométrie va solliciter.'},
-    {bloc:'Échauffement', id:'warm-squat', name:'Squats à vide', sets:{30:1}, reps:'15', tier:30, warm:true, sw:'jambes'},
-    {bloc:'Échauffement', id:'warm-lunge', name:'Fente avec rotation', sets:{30:1}, reps:'5 / côté', tier:30, warm:true, sw:'jambes'},
+    {bloc:'Échauffement', id:'warm-squat', name:'Squat', detail:'à vide, sans élastique', sets:{30:1}, reps:'15', tier:30, warm:true, swid:'1962158', sw:'jambes'},
+    {bloc:'Échauffement', id:'warm-lunge', name:'Fentes', detail:'avec rotation du buste', sets:{30:1}, reps:'5 / côté', tier:30, warm:true, swid:'1962000', sw:'jambes'},
     {bloc:'Pliométrie', id:'squat-jump', name:'Squat jumps', sets:{30:3,45:3,60:4}, reps:'6', rest:90, tier:30},
     {bloc:'Pliométrie', id:'skater', name:'Skater jumps', detail:'bonds latéraux', sets:{30:3,45:3,60:4}, reps:'6 / côté', rest:90, tier:30,
       note:'Le plus spécifique padel avec le départ 3 m. Si la réception devient molle, la série est finie.'},
     {bloc:'Pliométrie', id:'depart', name:'Départs explosifs 3 m', sets:{30:5,45:6,60:6}, reps:'1 départ', rest:60, tier:30},
-    {bloc:'Pliométrie', id:'split-jump', name:'Split jumps', detail:'fentes sautées', sets:{45:3,60:3}, reps:'8 / jambe', rest:75, tier:45},
+    {bloc:'Pliométrie', id:'split-jump', name:'Fentes Rebonds', detail:'fentes sautées', sets:{45:3,60:3}, reps:'8 / jambe', rest:75, tier:45, swid:'1962152', sw:'jambes'},
     {bloc:'Rotation', id:'twist', name:'Twist horizontal élastique', detail:'ancrage hauteur poitrine', sets:{45:3,60:3}, reps:'12 / côté', rest:60, tier:45, sw:'abdos',
       note:'Le geste du coup droit et du revers. Les pieds restent plantés : c’est le buste qui tourne, pas les bras qui tirent.'},
-    {bloc:'Force', id:'squat-elast', name:'Squat élastique', sets:{30:3,45:3,60:3}, reps:'12', rest:60, tier:30, sw:'jambes'},
-    {bloc:'Force', id:'mollets', name:'Mollets debout', sets:{30:2,45:3,60:3}, reps:'20', rest:45, tier:30, sw:'jambes'},
-    {bloc:'Force', id:'sdt', name:'Soulevé de terre roumain élastique', sets:{45:3,60:3}, reps:'12', rest:60, tier:45, sw:'jambes'},
+    {bloc:'Force', id:'squat-elast', name:'Squat', detail:'avec élastique', sets:{30:3,45:3,60:3}, reps:'12', rest:60, tier:30, swid:'1962158', sw:'jambes'},
+    {bloc:'Force', id:'mollets', name:'Extension Mollet', detail:'descente lente en 3 s', sets:{30:2,45:3,60:3}, reps:'20', rest:45, tier:30, swid:'1961999', sw:'jambes'},
+    {bloc:'Force', id:'sdt', name:'Soulevé de Terre', detail:'version roumaine, jambes semi-tendues', sets:{45:3,60:3}, reps:'12', rest:60, tier:45, swid:'1962157', sw:'jambes'},
     {bloc:'Gainage', id:'pallof', name:'Pallof press élastique', detail:'anti-rotation', sets:{45:2,60:3}, reps:'12 / côté', rest:45, tier:45, sw:'abdos'},
-    {bloc:'Force', id:'bulgare', name:'Fente bulgare', detail:'pied arrière sur chaise', sets:{60:3}, reps:'10 / jambe', rest:60, tier:60, sw:'jambes'},
+    {bloc:'Force', id:'bulgare', name:'Fentes Bulgares', detail:'pied arrière sur chaise', sets:{60:3}, reps:'10 / jambe', rest:60, tier:60, swid:'1962001', sw:'jambes'},
     {bloc:'Cardio', id:'intervalles', name:'Intervalles 20 s / 40 s', sets:{60:1}, reps:'8 min', rest:0, tier:60}
   ]
 };
@@ -737,11 +740,13 @@ const FIGURES = {
     cap: 'Élastique ancré devant toi à hauteur de nombril. Bras tendus, omoplates relâchées vers l\u2019avant au départ. Tu tires les coudes vers l\u2019arrière en serrant les omoplates.'
   },
   'dev-mil': {
-    svg: FRONT
-      + '<path class="b" d="M60 31 L48 42 L50 30"/><path class="b" d="M60 31 L72 42 L70 30"/>'
-      + '<path class="band" d="M48 92 Q44 60 50 30"/><path class="band" d="M72 92 Q76 60 70 30"/>'
-      + '<path class="arr" d="M84 30 L84 12"/>',
-    cap: 'Debout sur l\u2019élastique, pieds écartés largeur de bassin. Mains à hauteur d\u2019épaules, coudes pointés vers le bas. Tu pousses à la verticale sans cambrer le bas du dos.'
+    svg: '<circle class="hd" cx="46" cy="18" r="7"/><path class="b" d="M46 25 L46 56"/>'
+      + '<path class="b" d="M46 56 L70 58"/><path class="b" d="M70 58 L70 92"/>'
+      + '<rect class="anch" x="58" y="58" width="30" height="3"/>'
+      + '<path class="b" d="M46 31 L36 42 L38 30"/>'
+      + '<path class="band" d="M70 92 Q52 58 38 30"/>'
+      + '<path class="arr" d="M26 26 L26 8"/>',
+    cap: 'Assis au bord d’une chaise, dos droit, élastique passé sous les pieds. Mains à hauteur d’épaules, coudes pointant vers le bas. Tu pousses à la verticale sans reculer le buste : le dossier ou ton propre gainage bloquent la triche.'
   },
   'face-pull': {
     svg: '<circle class="hd" cx="48" cy="20" r="7"/><path class="b" d="M48 27 L48 58"/>'
@@ -868,11 +873,13 @@ const FIGURES = {
       + '<text x="8" y="92">× 10 à 12 tours</text>',
     cap: 'Alternance 20 secondes d\u2019effort maximal et 40 secondes de récupération active, 10 à 12 fois. Corde à sauter, montées de genoux ou vélo. Le format colle au profil du padel : échanges brefs, récup entre les points.'
   },
-  'pompes': {
-    svg: '<circle class="hd" cx="30" cy="52" r="7"/><path class="b" d="M37 56 L86 68"/>'
-      + '<path class="b" d="M40 57 L34 78 L30 92"/><path class="b" d="M86 68 L92 92"/>'
-      + '<path class="arr" d="M56 46 L56 30"/>',
-    cap: 'Corps gainé en ligne droite des talons à la tête, mains sous les épaules. « max −2 » veut dire : tu t\u2019arrêtes 2 répétitions avant l\u2019échec. Si tu peux en faire 12, tu en fais 10.'
+  'ecarte': {
+    svg: FRONT
+      + '<rect class="anch" x="52" y="2" width="16" height="3"/>'
+      + '<path class="b" d="M60 31 L38 22"/><path class="b" d="M60 31 L82 22"/>'
+      + '<path class="band" d="M58 5 L38 22"/><path class="band" d="M62 5 L82 22"/>'
+      + '<path class="arr" d="M38 32 Q48 46 57 54"/><path class="arr" d="M82 32 Q72 46 63 54"/>',
+    cap: 'Élastique ancré au-dessus de la tête, une poignée dans chaque main, bras écartés en croix. Tu ramènes les mains vers le bas et devant le buste, coudes légèrement fléchis et figés — c’est l’épaule qui travaille, pas le coude. Le poignet reste dans l’axe de l’avant-bras : c’est ce qui remplace les pompes sans écraser l’articulation.'
   }
 };
 const DURATIONS = [
@@ -1085,9 +1092,11 @@ function exCard(e, isBeyond){
       ${e.rest?`<button class="pill rest" data-rest="${e.rest}">repos ${e.rest} s ▸</button>`:''}
     </div>
     ${e.note?`<div class="ex-note">${e.note}</div>`:''}
-    ${e.sw
-      ? `<a class="swlink" href="${SW_BASE}${e.sw}" target="_blank" rel="noopener noreferrer">Exercices ${SW_GROUPS[e.sw]} SmartWorkout ↗</a>`
-      : '<div class="swnone">Pas de vidéo SmartWorkout — voir le schéma</div>'}
+    ${e.swid
+      ? `<a class="swlink" href="${SW_LESSON}${e.swid}" target="_blank" rel="noopener noreferrer">Vidéo SmartWorkout ↗</a>`
+      : e.sw
+        ? `<a class="swlink" href="${SW_BASE}${e.sw}" target="_blank" rel="noopener noreferrer">Exercices ${SW_GROUPS[e.sw]} SmartWorkout ↗</a>`
+        : '<div class="swnone">Pas de vidéo SmartWorkout — voir le schéma</div>'}
     ${FIGURES[e.id]?`
     <button class="figbtn" aria-expanded="false">▸ Position de départ</button>
     <div class="figbox">
