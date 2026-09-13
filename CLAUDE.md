@@ -286,6 +286,8 @@ fait couper au rendu, sans la moindre erreur console.
 - `render()` reconstruit tout le DOM au moindre clic, ce qui referme les schémas dépliés.
 - L'import JSON ne valide rien et `log.load` ressort en `innerHTML` non échappé (self-XSS).
 - `SVG_HEAD` répète `<marker id="ah">` dans chaque carte — ids dupliqués dans le DOM.
-- Séance B en 45 et 60 min déborde son budget (≈ 54 et ≈ 70 min) : le volume pliométrique du
-  format 60 atteint ~126 contacts au sol, au-dessus de la fourchette usuelle de 80-120.
+- Séance B en 60 min tourne à ≈ 57 min de travail pur, soit ≈ 62-65 min réelles avec les
+  transitions. Les intervalles (8 min) sont conservés par choix de Flo — ne pas les retirer pour
+  rentrer dans le budget. Le volume pliométrique est calé à 96 contacts au sol en 45 et 60
+  (126 en semaines 5-6 avec les +2 reps) ; ne pas le remonter.
 - Aucun suivi du poids corporel, alors que la perte de gras est un objectif déclaré.

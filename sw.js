@@ -2,7 +2,7 @@
 // Stratégie : cache-first sur les fichiers de l'app (elle est entièrement statique),
 // avec mise à jour en arrière-plan au prochain lancement.
 
-const VERSION = 'prepa-padel-v5';
+const VERSION = 'prepa-padel-v6';
 const ASSETS = [
   './',
   './index.html',

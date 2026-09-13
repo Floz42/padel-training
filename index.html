@@ -608,12 +608,13 @@ const PROGRAM = {
       note:'Réveille les fessiers et la stabilité latérale du genou — exactement ce que la pliométrie va solliciter.'},
     {bloc:'Échauffement', id:'warm-squat', name:'Squat', detail:'à vide, sans élastique', sets:{30:1}, reps:'15', tier:30, warm:true, swid:'1962158', sw:'jambes'},
     {bloc:'Échauffement', id:'warm-lunge', name:'Fentes', detail:'avec rotation du buste', sets:{30:1}, reps:'5 / côté', tier:30, warm:true, swid:'1962000', sw:'jambes'},
-    {bloc:'Pliométrie', id:'squat-jump', name:'Squat jumps', sets:{30:3,45:3,60:4}, reps:'6', rest:90, tier:30},
-    {bloc:'Pliométrie', id:'skater', name:'Skater jumps', detail:'bonds latéraux', sets:{30:3,45:3,60:4}, reps:'6 / côté', rest:90, tier:30,
+    {bloc:'Pliométrie', id:'squat-jump', name:'Squat jumps', sets:{30:3}, reps:'6', rest:90, tier:30},
+    {bloc:'Pliométrie', id:'skater', name:'Skater jumps', detail:'bonds latéraux', sets:{30:3}, reps:'6 / côté', rest:90, tier:30,
       note:'Le plus spécifique padel avec le départ 3 m. Si la réception devient molle, la série est finie.'},
     {bloc:'Pliométrie', id:'depart', name:'Départs explosifs 3 m', sets:{30:5,45:6,60:6}, reps:'1 départ', rest:60, tier:30},
-    {bloc:'Pliométrie', id:'split-jump', name:'Fentes Rebonds', detail:'fentes sautées', sets:{45:3,60:3}, reps:'8 / jambe', rest:75, tier:45, swid:'1962152', sw:'jambes'},
-    {bloc:'Rotation', id:'twist', name:'Twist horizontal élastique', detail:'ancrage hauteur poitrine', sets:{45:3,60:3}, reps:'12 / côté', rest:60, tier:45, sw:'abdos',
+    {bloc:'Pliométrie', id:'split-jump', name:'Fentes Rebonds', detail:'fentes sautées', sets:{45:3}, reps:'6 / jambe', rest:75, tier:45, swid:'1962152', sw:'jambes',
+      note:'L’exo le plus exigeant pour les genoux de toute la séance : le volume reste à 6 par jambe, même en semaines 5-6. Si le genou avant rentre vers l’intérieur à la réception, la série est finie.'},
+    {bloc:'Rotation', id:'twist', name:'Twist horizontal élastique', detail:'ancrage hauteur poitrine', sets:{45:2,60:3}, reps:'12 / côté', rest:60, tier:45, sw:'abdos',
       note:'Le geste du coup droit et du revers. Les pieds restent plantés : c’est le buste qui tourne, pas les bras qui tirent.'},
     {bloc:'Force', id:'squat-elast', name:'Squat', detail:'avec élastique', sets:{30:3,45:3,60:3}, reps:'12', rest:60, tier:30, swid:'1962158', sw:'jambes'},
     {bloc:'Force', id:'mollets', name:'Extension Mollet', detail:'descente lente en 3 s', sets:{30:2,45:3,60:3}, reps:'20', rest:45, tier:30, swid:'1961999', sw:'jambes'},
@@ -936,7 +937,7 @@ const DURATIONS = [
 const WEEK_NOTES = {
   1:'Semaines 1–2 : apprentissage. Élastique léger et <strong>une série en moins</strong> partout — appliqué automatiquement ci-dessous.',
   3:'Semaines 3–4 : volume complet du format choisi.',
-  5:'Semaines 5–6 : élastique plus résistant sur la force, <strong>+2 reps</strong> sur la pliométrie.',
+  5:'Semaines 5–6 : élastique plus résistant sur la force, <strong>+2 reps</strong> sur squat jumps et skaters — pas sur les fentes rebonds.',
   7:'Semaines 7–8 : tempo excentrique lent, <strong>3 s à la descente</strong> sur développé et tirage.',
   9:'Semaine 9 : décharge à <strong>50 % du volume</strong>, puis on réévalue les repères.'
 };
