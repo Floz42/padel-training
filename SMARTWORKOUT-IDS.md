@@ -20,9 +20,13 @@ exactement comme dans l'app, et poser les liens `swid` vers les vidéos.
 | `tirage` | Tirage Horizontal Prise Large | 1963501 |
 | `ecarte` | Écarté Poulie Haute | 1963667 |
 | `dev-mil` | Développé Militaire Assis | 1962143 |
+| `tirage-vert` | Tirage Vertical | 1963499 |
+| `pullover` | Pull Over | 1963507 |
 | `face-pull` | Face Pull | 1962142 |
 | `curl` | Biceps Curl | 1961995 |
 | `triceps` | Triceps Extension Poulie Haute | 1961565 |
+| `curl-pronation` | Biceps Curl Pronation | 1961998 |
+| `wrist-ext` | — | — |
 | `planche-lat` | — | — |
 | `warm-monster` | Abduction | 1961935 |
 | `warm-squat` | Squat | 1962158 |
@@ -50,6 +54,7 @@ la vidéo montrerait autre chose :
 - **Rotation** : chop diagonal, twist horizontal (le geste du padel)
 - **Pliométrie** : squat jumps, skater jumps, départs 3 m
 - **Épaule** : cercles de bras, passe-barre, rotation externe (aucun travail de coiffe chez eux)
+- **Avant-bras** : extension de poignet (aucun exercice d'avant-bras au catalogue)
 - **Cardio** : intervalles 20/40
 
 ## La bibliothèque complète

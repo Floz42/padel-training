@@ -584,14 +584,22 @@ const PROGRAM = {
       note:'Le geste du smash. La puissance part des jambes et passe par le tronc : tu tournes les hanches, tu ne tires pas avec les bras.'},
     {bloc:'Force', id:'dev-couche', name:'Développé Debout', detail:'ancrage porte · poignées ou barre', sets:{30:3,45:4,60:4}, reps:'8–10', rest:90, tier:30, swid:'1963663', sw:'pectoraux'},
     {bloc:'Force', id:'tirage', name:'Tirage Horizontal Prise Large', detail:'ancrage hauteur nombril', sets:{30:3,45:4,60:4}, reps:'10–12', rest:90, tier:30, swid:'1963501', sw:'dos'},
+    {bloc:'Force', id:'tirage-vert', name:'Tirage Vertical', detail:'ancrage haut · à genoux ou assis', sets:{45:3,60:3}, reps:'10–12', rest:75, tier:45, swid:'1963499', sw:'dos',
+      note:'Le tirage du smash : bras au-dessus de la tête, tu ramènes les coudes vers les côtes. Si les épaules montent vers les oreilles en fin de série, c’est fini — le trapèze a pris le relais des dorsaux.'},
     {bloc:'Force', id:'ecarte', name:'Écarté Poulie Haute', detail:'ancrage haut · poignées', sets:{30:2,45:3,60:3}, reps:'12–15', rest:60, tier:30, swid:'1963667', sw:'pectoraux',
       note:'Remplace les pompes : les poignées gardent le poignet dans l’axe, sans l’écrasement de l’appui au sol. Coudes légèrement fléchis et figés — c’est l’épaule qui ouvre et ferme, jamais le coude.'},
     {bloc:'Force', id:'dev-mil', name:'Développé Militaire Assis', detail:'assis, élastique sous les pieds', sets:{45:3,60:3}, reps:'10', rest:60, tier:45, swid:'1962143', sw:'epaule',
       note:'Assis, tu ne peux pas compenser en cambrant le bas du dos — c’est tout l’intérêt par rapport au debout. Si tu dois te pencher en arrière pour finir la rep, l’élastique est trop résistant.'},
     {bloc:'Gainage', id:'planche-lat', name:'Planche latérale', sets:{45:2,60:3}, reps:'30 s / côté', rest:45, tier:45, sw:'abdos'},
+    {bloc:'Force', id:'pullover', name:'Pull Over', detail:'ancrage haut · dos à la porte', sets:{60:3}, reps:'12', rest:60, tier:60, swid:'1963507', sw:'dos',
+      note:'C’est le freinage du bras après le smash. Coudes presque tendus et figés : le mouvement part de l’épaule, en arc, jusqu’aux cuisses. Si les coudes plient pour finir la rep, tu fais du triceps — allège.'},
     {bloc:'Force', id:'face-pull', name:'Face Pull', detail:'ancrage au-dessus de la tête', sets:{60:3}, reps:'15', rest:45, tier:60, swid:'1962142', sw:'epaule'},
     {bloc:'Force', id:'curl', name:'Biceps Curl', detail:'coudes collés aux côtes', sets:{60:2}, reps:'12', rest:45, tier:60, swid:'1961995', sw:'bras'},
-    {bloc:'Force', id:'triceps', name:'Triceps Extension Poulie Haute', detail:'coudes fixes', sets:{60:2}, reps:'12', rest:45, tier:60, swid:'1961565', sw:'bras'}
+    {bloc:'Force', id:'triceps', name:'Triceps Extension Poulie Haute', detail:'coudes fixes', sets:{60:2}, reps:'12', rest:45, tier:60, swid:'1961565', sw:'bras'},
+    {bloc:'Force', id:'curl-pronation', name:'Biceps Curl Pronation', detail:'paumes vers le bas', sets:{60:2}, reps:'12', rest:45, tier:60, swid:'1961998', sw:'bras',
+      note:'Prévention du padel elbow : la prise en pronation charge les extenseurs de l’avant-bras, ceux qui encaissent chaque frappe. Élastique plus léger que le curl classique — si le poignet casse vers le bas pendant la montée, c’est trop lourd.'},
+    {bloc:'Force', id:'wrist-ext', name:'Extension de poignet élastique', detail:'avant-bras posé sur la cuisse', sets:{60:2}, reps:'15 / côté', rest:30, tier:60,
+      note:'Même cible que le curl pronation, en isolé. Lent dans les deux sens, surtout à la descente. Une gêne au coude pendant la série, pas après : tu arrêtes, ce n’est pas le moment d’insister.'}
   ],
   B: [
     {bloc:'Échauffement', id:'planche', name:'Planche', detail:'activation', sets:{30:2}, reps:'30 s', tier:30, warm:true, sw:'abdos',
@@ -738,6 +746,43 @@ const FIGURES = {
       + '<path class="band" d="M108 40 L74 40"/>'
       + '<path class="arr" d="M80 52 L54 52"/>',
     cap: 'Élastique ancré devant toi à hauteur de nombril. Bras tendus, omoplates relâchées vers l\u2019avant au départ. Tu tires les coudes vers l\u2019arrière en serrant les omoplates.'
+  },
+  'tirage-vert': {
+    svg: '<circle class="hd" cx="60" cy="36" r="7"/><path class="b" d="M60 43 L60 70"/>'
+      + '<path class="b" d="M60 70 L46 74 L46 92"/><path class="b" d="M60 70 L74 74 L74 92"/>'
+      + '<path class="b" d="M60 48 L70 30 L72 14"/>'
+      + '<rect class="anch" x="108" y="4" width="6" height="20"/>'
+      + '<path class="band" d="M108 10 L72 14"/>'
+      + '<path class="arr" d="M84 30 L84 54"/>'
+      + '<text x="4" y="86">à genoux</text>',
+    cap: 'Élastique ancré tout en haut de la porte, face à toi. À genoux ou assis sur une chaise pour avoir de l’amplitude. Bras tendus vers le haut au départ, tu tires les coudes vers le bas et vers les côtes, buste droit. Les mains finissent à hauteur du menton.'
+  },
+  'pullover': {
+    svg: SIDE
+      + '<path class="b" d="M48 33 L36 22 L28 14"/>'
+      + '<rect class="anch" x="108" y="4" width="6" height="20"/>'
+      + '<path class="band" d="M108 10 Q70 4 28 14"/>'
+      + '<path class="arr" d="M22 26 Q14 50 30 72"/>',
+    cap: 'Dos à la porte, élastique ancré tout en haut derrière toi. Bras tendus au-dessus de la tête, mains jointes sur la poignée. Coudes quasi tendus et figés, tu abaisses les bras en arc jusqu’aux cuisses. Le buste reste vertical : si tu te penches en avant pour finir, l’élastique est trop résistant.'
+  },
+  'curl-pronation': {
+    svg: FRONT
+      + '<path class="b" d="M60 31 L52 46 L52 58"/><path class="b" d="M60 31 L68 46 L68 58"/>'
+      + '<path class="b" d="M48 58 L56 58"/><path class="b" d="M64 58 L72 58"/>'
+      + '<path class="band" d="M48 92 Q48 74 52 58"/><path class="band" d="M72 92 Q72 74 68 58"/>'
+      + '<path class="arr" d="M84 56 L84 36"/>'
+      + '<text x="4" y="62">paumes bas</text>',
+    cap: 'Debout sur l’élastique, bras le long du corps, paumes vers le bas — c’est la seule différence avec le curl classique. Coudes collés aux côtes, poignet verrouillé dans l’axe de l’avant-bras pendant tout le mouvement.'
+  },
+  'wrist-ext': {
+    svg: '<circle class="hd" cx="46" cy="18" r="7"/><path class="b" d="M46 25 L46 56"/>'
+      + '<path class="b" d="M46 56 L70 58"/><path class="b" d="M70 58 L70 92"/>'
+      + '<rect class="anch" x="58" y="58" width="30" height="3"/>'
+      + '<path class="b" d="M46 34 L62 46 L80 46"/>'
+      + '<path class="band" d="M70 92 Q78 70 80 46"/>'
+      + '<path class="arr" d="M88 44 L88 30"/>'
+      + '<text x="4" y="86">poignet libre</text>',
+    cap: 'Assis, avant-bras posé sur la cuisse, paume vers le bas, la main dépasse du genou. Élastique sous le pied, poignée en main. Seul le poignet bouge : tu relèves la main vers toi, puis tu la redescends lentement. L’avant-bras ne décolle pas de la cuisse.'
   },
   'dev-mil': {
     svg: '<circle class="hd" cx="46" cy="18" r="7"/><path class="b" d="M46 25 L46 56"/>'

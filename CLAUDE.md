@@ -133,9 +133,9 @@ curl -s -o /dev/null -w "%{http_code}" https://smartworkout-pro.com/pages/exerci
 « Tirage Horizontal Prise Large », « Fentes Rebonds »…), pour que l'intitulé affiché
 corresponde mot pour mot à la vidéo. Ne pas les franciser autrement ni les reformuler.
 
-Onze exercices n'ont **aucun** équivalent et n'en auront pas : la bibliothèque SmartWorkout ne
+Douze exercices n'ont **aucun** équivalent et n'en auront pas : la bibliothèque SmartWorkout ne
 contient ni gainage, ni rotation du tronc, ni pliométrie, ni cardio, ni travail de coiffe des
-rotateurs — c'est une marque d'élastiques. Ils gardent leur intitulé et leur schéma. Ne pas
+rotateurs, ni avant-bras — c'est une marque d'élastiques. Ils gardent leur intitulé et leur schéma. Ne pas
 leur coller un mouvement approchant du catalogue : la vidéo montrerait autre chose. Le détail
 par exercice est dans [`SMARTWORKOUT-IDS.md`](SMARTWORKOUT-IDS.md).
 
@@ -288,7 +288,4 @@ fait couper au rendu, sans la moindre erreur console.
 - `SVG_HEAD` répète `<marker id="ah">` dans chaque carte — ids dupliqués dans le DOM.
 - Séance B en 45 et 60 min déborde son budget (≈ 54 et ≈ 70 min) : le volume pliométrique du
   format 60 atteint ~126 contacts au sol, au-dessus de la fourchette usuelle de 80-120.
-- Rien ne travaille l'avant-bras en charge, alors que le « padel elbow » est le pépin classique
-  du sport. La bibliothèque SmartWorkout n'a aucun exercice d'avant-bras à élastique, mais
-  `forearms/wrist-push-up` existe au poids du corps.
 - Aucun suivi du poids corporel, alors que la perte de gras est un objectif déclaré.
