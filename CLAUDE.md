@@ -47,7 +47,7 @@ vers Vue/Nuxt, ne pas ajouter de bundler, ne pas introduire de package npm.
 
 | Fichier | Rôle |
 |---|---|
-| `index.html` | Toute l'app : CSS (l. 15-467), markup (l. 469-533), JS (l. 534-1176) |
+| `index.html` | Toute l'app : CSS (l. 15-541), markup (l. 543-607), JS (l. 609-1513) |
 | `sw.js` | Service worker cache-first, offline |
 | `manifest.webmanifest` | PWA : icônes, `display: standalone`, raccourcis |
 | `icon*.png` / `icon.svg` | Icônes |
@@ -172,13 +172,28 @@ le schéma est **générée automatiquement** par `figLegend()` en détectant le
 {
   duration:45,      // 30 | 45 | 60
   session:'A',      // 'A' | 'B' | 'M' (articulations)
-  week:1,           // 1..9
+  start:'2026-08-23', // jour de la première séance (local, 'YYYY-MM-DD') ; null tant qu'aucune séance
   checked:{},       // 'A|dev-couche' -> bool, vidé au changement de séance et au "Terminer"
-  logs:{},          // 'A|dev-couche' -> {load, reps, date}
-  history:[],       // {date, session, duration, week, done}
+  logs:{},          // 'A|dev-couche' -> {load, date} — bande courante (reps : champ retiré, Flo tient toujours la prescription)
+  logHist:{},       // 'A|dev-couche' -> [{date, week, load, reps}] — une entrée par "Terminer" où l'exo est coché
+  history:[],       // {date, session, duration, week, done} — week figée au "Terminer"
   daily:{}          // '2026-08-23' -> nombre de doses articulaires (0..3)
 }
 ```
+
+**La semaine n'est plus choisie à la main.** `curWeek()` = bloc de 7 jours écoulé depuis
+`state.start` (+1), sans plafond : au-delà de 9 on reste en décharge jusqu'au bouton
+« Nouveau cycle », qui remet `start` à aujourd'hui sans toucher l'historique. `start` est posé
+par la première séance terminée. `migrate()` (au chargement et à l'import) convertit l'ancien
+schéma `week:N` : `start` = date de la plus ancienne entrée d'historique, et chaque entrée est
+renumérotée d'après sa date. Un export antérieur à ce changement s'importe donc sans rien faire.
+
+**`logHist` est la matière du bilan de fin de cycle.** `archiveLogs()` ajoute une entrée par
+exercice coché à chaque « Terminer », même si la bande n'a pas bougé — c'est la stagnation
+qu'on veut voir. `migrate()` l'amorce depuis `logs` (une entrée par exo déjà renseigné). Les
+`reps` archivées sont la prescription (`e.reps`), pas une saisie. La progression attendue est
+la double progression (affichée via `PROGRESS_RULE`) : haut de fourchette tenu partout → bande
+au-dessus, retour en bas de fourchette.
 
 ---
 

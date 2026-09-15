@@ -122,6 +122,28 @@ select{
   background:var(--card);
   color:var(--ink);
 }
+.week-val{
+  font-family:var(--body);
+  font-size:15px;
+  padding:10px;
+  border:2px solid var(--rail);
+  border-radius:2px;
+  background:var(--card);
+  color:var(--ink);
+}
+.week-val small{color:var(--muted);font-size:12px;margin-left:6px}
+.week-cycle{
+  display:block;
+  margin-top:4px;
+  padding:0;
+  border:0;
+  background:none;
+  font-family:var(--data);
+  font-size:11px;
+  color:var(--muted);
+  text-decoration:underline;
+  cursor:pointer;
+}
 
 /* ---------- session note ---------- */
 .note{
@@ -326,6 +348,26 @@ button.pill.work:focus-visible{outline:3px solid var(--line);outline-offset:2px}
 .hist-row .d{color:var(--muted)}
 .hist-row .s{font-weight:600}
 .empty{font-size:14px;color:var(--muted);padding:8px 0}
+.hist-pager{
+  display:flex;align-items:center;gap:8px;
+  margin-top:10px;
+  font-family:var(--data);font-size:12.5px;color:var(--muted);
+}
+.hist-pager span{flex:1;text-align:center}
+.hist-pager button{
+  font-family:var(--display);
+  font-size:15px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.03em;
+  padding:8px 14px;
+  background:var(--card);
+  border:2px solid var(--rail);
+  border-radius:2px;
+  color:var(--ink);
+  cursor:pointer;
+}
+.hist-pager button:disabled{opacity:.35;cursor:default}
 
 /* ---------- rest timer ---------- */
 .timer{
@@ -526,7 +568,8 @@ svg .flr{stroke:var(--ink);stroke-width:2.6;stroke-linecap:round}
       </div>
       <div id="weekWrap">
         <div class="ctl-label">Semaine</div>
-        <select id="selWeek"></select>
+        <div class="week-val" id="weekVal"></div>
+        <button type="button" class="week-cycle" id="btnCycle">Nouveau cycle</button>
       </div>
     </div>
   </div>
@@ -941,12 +984,15 @@ const WEEK_NOTES = {
   7:'Semaines 7–8 : tempo excentrique lent, <strong>3 s à la descente</strong> sur développé et tirage.',
   9:'Semaine 9 : décharge à <strong>50 % du volume</strong>, puis on réévalue les repères.'
 };
+const PROGRESS_RULE = 'Règle permanente : quand tu tiens <strong>le haut de la fourchette sur toutes les séries</strong>, monte d\'une bande la fois suivante et repars en bas de fourchette. Note la bande à chaque séance, même si elle ne bouge pas.';
 function weekNote(w){
-  if(w<=2) return WEEK_NOTES[1];
-  if(w<=4) return WEEK_NOTES[3];
-  if(w<=6) return WEEK_NOTES[5];
-  if(w<=8) return WEEK_NOTES[7];
-  return WEEK_NOTES[9];
+  let n;
+  if(w<=2) n = WEEK_NOTES[1];
+  else if(w<=4) n = WEEK_NOTES[3];
+  else if(w<=6) n = WEEK_NOTES[5];
+  else if(w<=8) n = WEEK_NOTES[7];
+  else n = WEEK_NOTES[9];
+  return n + '<br><br>' + PROGRESS_RULE;
 }
 function effSets(base, week){
   if(!base) return 0;
@@ -955,7 +1001,68 @@ function effSets(base, week){
   return base;
 }
 
-let state = {duration:45, session:'A', week:1, checked:{}, logs:{}, history:[], daily:{}};
+let state = {duration:45, session:'A', start:null, checked:{}, logs:{}, history:[], daily:{}};
+
+/* ---------- semaine calculee depuis la date de depart ---------- */
+// 'YYYY-MM-DD' en heure locale (la date ISO de l'historique est en UTC)
+function dayKey(d){
+  d = d instanceof Date ? d : new Date(d);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+/**
+ * Semaine du programme a une date donnee : blocs de 7 jours depuis state.start
+ * (jour de la premiere seance). Sans date de depart, on est en semaine 1.
+ * Pas de plafond : au-dela de 9 on reste en decharge jusqu'au "Nouveau cycle".
+ */
+function weekOf(date){
+  if(!state.start) return 1;
+  const a = new Date(state.start+'T00:00:00'), b = new Date(dayKey(date)+'T00:00:00');
+  const days = Math.round((b - a) / 86400000);
+  return Math.max(1, Math.floor(days/7) + 1);
+}
+function curWeek(){ return weekOf(new Date()); }
+
+/**
+ * Migration depuis l'ancien schema (semaine choisie a la main) : la date de
+ * depart devient celle de la premiere seance enregistree, et chaque entree
+ * d'historique est renumerotee d'apres sa date. Ne tourne qu'une fois.
+ */
+function migrate(){
+  delete state.week;
+  const h = state.history || [];
+  if(!state.start && h.length){
+    state.start = dayKey(h.reduce((m,x)=> x.date < m ? x.date : m, h[0].date));
+    h.forEach(x=>{ x.week = weekOf(x.date); });
+  }
+  // amorce l'historique des charges avec la valeur courante de chaque exo deja logue
+  if(!state.logHist){
+    state.logHist = {};
+    Object.entries(state.logs || {}).forEach(([key, l])=>{
+      if(!l || (!l.load && !l.reps)) return;
+      state.logHist[key] = [{date:l.date || null, week:l.date ? weekOf(l.date) : null, load:l.load || '', reps:l.reps || ''}];
+    });
+  }
+}
+
+/**
+ * Au "Terminer" : archive la bande/reps de chaque exo coche dans state.logHist
+ * (une entree par seance, meme si la valeur n'a pas bouge — c'est justement la
+ * stagnation qu'on veut voir au bilan). Les reps sont celles du programme :
+ * Flo tient toujours la prescription, seule la bande varie.
+ * Rafraichit aussi la date du "Derniere fois".
+ */
+function archiveLogs(now, week){
+  state.logHist = state.logHist || {};
+  const list = PROGRAM[state.session] || [];
+  list.forEach(e=>{
+    const key = state.session+'|'+e.id;
+    if(e.warm || !state.checked[key]) return;
+    const l = state.logs[key];
+    if(!l || !l.load) return;
+    l.date = now;
+    (state.logHist[key] = state.logHist[key] || []).push({date:now, week, load:l.load, reps:e.reps});
+  });
+}
 
 function flash(msg){
   const el = document.getElementById('status');
@@ -1008,7 +1115,8 @@ function load(){
   }catch(e){
     storageMode = 'ok';   // donnée illisible : on repart d'un état neuf sans bloquer
   }
-  lastSaved = JSON.stringify(state);
+  migrate();
+  lastSaved = null; doSave();
   render();
 }
 
@@ -1049,6 +1157,7 @@ function importData(file){
   r.onload = ()=>{
     try{
       state = Object.assign(state, JSON.parse(r.result));
+      migrate();
       lastSaved = null; doSave(); render();
       flash('Données importées');
     }catch(e){ flash('Fichier illisible'); }
@@ -1076,15 +1185,12 @@ function render(){
     state.duration = +b.dataset.dur; save(); render();
   });
 
-  const selW = document.getElementById('selWeek');
-  if(!selW.options.length){
-    for(let i=1;i<=9;i++){
-      const o=document.createElement('option'); o.value=i; o.textContent='Semaine '+i; selW.appendChild(o);
-    }
-  }
-  selW.value = state.week;
+  const week = curWeek();
+  document.getElementById('weekVal').innerHTML = 'Semaine ' + week
+    + (state.start ? `<small>depuis le ${fmtDate(state.start)}</small>` : '<small>démarre à ta première séance</small>');
+  document.getElementById('btnCycle').style.display = state.start ? '' : 'none';
   document.getElementById('selSession').value = state.session;
-  document.getElementById('note').innerHTML = weekNote(state.week);
+  document.getElementById('note').innerHTML = weekNote(week);
 
   const list = PROGRAM[state.session];
   const inFormat = list.filter(e=>e.tier<=state.duration);
@@ -1121,7 +1227,7 @@ function exCard(e, isBeyond){
   const key = state.session+'|'+e.id;
   const base = e.sets[state.duration] || e.sets[e.tier];
   // l'échauffement garde son volume tel quel : ni allégé en semaine 1-2, ni réduit en décharge
-  const s = (isBeyond || e.warm) ? base : effSets(base, state.week);
+  const s = (isBeyond || e.warm) ? base : effSets(base, curWeek());
   const done = !!state.checked[key];
   const log = state.logs[key];
 
@@ -1154,10 +1260,8 @@ function exCard(e, isBeyond){
     <div class="inputs">
       <label><div class="ctl-label">Élastique / charge</div>
         <input type="text" data-f="load" placeholder="ex. rouge ×2" value="${log&&log.load?escapeAttr(log.load):''}"></label>
-      <label><div class="ctl-label">Reps tenues</div>
-        <input type="text" inputmode="numeric" data-f="reps" placeholder="—" value="${log&&log.reps?escapeAttr(log.reps):''}"></label>
     </div>
-    <div class="last">${log&&log.date?`Dernière fois · <b>${log.load||'—'}</b> · ${log.reps||'—'} reps · ${fmtDate(log.date)}`:'Pas encore de repère enregistré'}</div>`}
+    <div class="last">${log&&log.date?`Dernière fois · <b>${log.load||'—'}</b> · ${fmtDate(log.date)}`:'Pas encore de repère enregistré'}</div>`}
   `;
 
   const chk = div.querySelector('.chk');
@@ -1182,20 +1286,17 @@ function exCard(e, isBeyond){
       state.logs[key] = cur;
       save();
       const l = div.querySelector('.last');
-      if(l) l.innerHTML = `Dernière fois · <b>${cur.load||'—'}</b> · ${cur.reps||'—'} reps · ${fmtDate(cur.date)}`;
+      if(l) l.innerHTML = `Dernière fois · <b>${cur.load||'—'}</b> · ${fmtDate(cur.date)}`;
     };
   });
   return div;
 }
 
 /* ---------- articulations ---------- */
-function todayKey(){
-  const d = new Date();
-  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-}
+function todayKey(){ return dayKey(new Date()); }
 function dayKeyFrom(offset){
   const d = new Date(); d.setDate(d.getDate()-offset);
-  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  return dayKey(d);
 }
 function streak(){
   state.daily = state.daily || {};
@@ -1287,16 +1388,29 @@ function fmtDate(iso){
   return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'});
 }
 
+const HIST_PAGE = 10;
+let histPage = 0; // 0 = les plus recentes ; non persiste, revient a 0 au rechargement
+
 function renderHistory(){
   const host = document.getElementById('histList');
-  const h = (state.history||[]).slice(-8).reverse();
-  if(!h.length){ host.innerHTML = '<div class="empty">Termine une séance pour la voir apparaître ici.</div>'; return; }
+  const all = (state.history||[]).slice().reverse();
+  if(!all.length){ host.innerHTML = '<div class="empty">Termine une séance pour la voir apparaître ici.</div>'; return; }
+  const pages = Math.ceil(all.length / HIST_PAGE);
+  histPage = Math.min(Math.max(histPage, 0), pages - 1);
+  const h = all.slice(histPage*HIST_PAGE, (histPage+1)*HIST_PAGE);
   host.innerHTML = h.map(x=>`<div class="hist-row">
     <span class="d">${fmtDate(x.date)}</span>
     <span class="s">Séance ${x.session}</span>
     <span>${x.duration} min · S${x.week}</span>
     <span style="margin-left:auto">${x.done} exos</span>
-  </div>`).join('');
+  </div>`).join('') + (pages > 1 ? `<div class="hist-pager">
+    <button data-hp="-1" ${histPage===0?'disabled':''} aria-label="Séances plus récentes">‹</button>
+    <span>${histPage+1} / ${pages} · ${all.length} séances</span>
+    <button data-hp="1" ${histPage===pages-1?'disabled':''} aria-label="Séances plus anciennes">›</button>
+  </div>` : '');
+  host.querySelectorAll('[data-hp]').forEach(b=>{
+    b.onclick = ()=>{ histPage += Number(b.dataset.hp); renderHistory(); };
+  });
 }
 
 /* ---------- rest timer ---------- */
@@ -1392,8 +1506,10 @@ document.getElementById('selSession').onchange = (ev)=>{
   if(v !== 'M' && state.session !== 'M') state.checked = {};
   state.session = v; save(); render();
 };
-document.getElementById('selWeek').onchange = (ev)=>{
-  state.week = +ev.target.value; save(); render();
+document.getElementById('btnCycle').onclick = ()=>{
+  if(!confirm('Repartir en semaine 1 à partir d\'aujourd\'hui ? L\'historique est conservé.')) return;
+  state.start = todayKey(); save(); render();
+  flash('Nouveau cycle · semaine 1');
 };
 document.getElementById('btnReset').onclick = ()=>{
   state.checked = {}; save(); render();
@@ -1402,7 +1518,10 @@ document.getElementById('btnFinish').onclick = ()=>{
   const done = Object.values(state.checked).filter(Boolean).length;
   if(!done){ flash('Coche au moins un exercice avant de terminer'); return; }
   state.history = state.history || [];
-  state.history.push({date:new Date().toISOString(), session:state.session, duration:state.duration, week:state.week, done});
+  if(!state.start) state.start = todayKey();   // la premiere seance fixe le depart du programme
+  const now = new Date().toISOString(), week = curWeek();
+  state.history.push({date:now, session:state.session, duration:state.duration, week, done});
+  archiveLogs(now, week);
   state.checked = {};
   save(); render();
   flash('Séance enregistrée · ' + done + ' exercices');
