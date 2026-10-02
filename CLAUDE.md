@@ -171,13 +171,15 @@ le schéma est **générée automatiquement** par `figLegend()` en détectant le
 ```js
 {
   duration:45,      // 30 | 45 | 60
-  session:'A',      // 'A' | 'B' | 'M' (articulations)
+  session:'A',      // 'A' | 'B' | 'M' (articulations) | 'P' (protéines) — M et P = isOff()
   start:'2026-08-23', // jour de la première séance (local, 'YYYY-MM-DD') ; null tant qu'aucune séance
   checked:{},       // 'A|dev-couche' -> bool, vidé au changement de séance et au "Terminer"
   logs:{},          // 'A|dev-couche' -> {load, date} — bande courante (reps : champ retiré, Flo tient toujours la prescription)
   logHist:{},       // 'A|dev-couche' -> [{date, week, load, reps}] — une entrée par "Terminer" où l'exo est coché
   history:[],       // {date, session, duration, week, done} — week figée au "Terminer"
-  daily:{}          // '2026-08-23' -> nombre de doses articulaires (0..3)
+  daily:{}          // '2026-08-23' -> nombre de doses articulaires (0..3),
+  protein:{}        // '2026-10-02' -> [{g, t?}] — grammes + aliment facultatif, total = somme du jour,
+  lastView:'A'      // vue a retrouver en quittant P (bouton Protéines du header) ; P n'est plus dans le select
 }
 ```
 
@@ -306,3 +308,5 @@ fait couper au rendu, sans la moindre erreur console.
   rentrer dans le budget. Le volume pliométrique est calé à 96 contacts au sol en 45 et 60
   (126 en semaines 5-6 avec les +2 reps) ; ne pas le remonter.
 - Aucun suivi du poids corporel, alors que la perte de gras est un objectif déclaré.
+  Le suivi des protéines (vue P) n'a pas d'objectif chiffré pour cette raison : sans poids,
+  pas de cible en g/kg.

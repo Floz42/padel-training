@@ -57,6 +57,15 @@ header{
   margin:0;
 }
 .brand span{color:var(--ball)}
+header .wrap{display:flex;align-items:center;gap:12px}
+header .wrap > div{flex:1;min-width:0}
+.prot-btn{
+  flex:0 0 auto;
+  font-family:var(--display);font-size:17px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;
+  padding:10px 14px;background:var(--ball);color:var(--ink);
+  border:2px solid var(--ink);border-radius:2px;cursor:pointer;
+}
+.prot-btn:focus-visible{outline:3px solid #fff;outline-offset:2px}
 .tag{
   font-family:var(--data);
   font-size:11px;
@@ -463,6 +472,40 @@ button.pill.work:focus-visible{outline:3px solid var(--line);outline-offset:2px}
   margin-top:6px;
 }
 
+/* ---------- proteines ---------- */
+.prot-nav{display:flex;align-items:center;gap:8px}
+.prot-nav span{flex:1;text-align:center;color:var(--ink);font-family:var(--display);font-size:18px;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.prot-nav button{flex:0 0 auto;padding:8px 14px}
+.prot-total{font-family:var(--display);font-size:46px;font-weight:700;line-height:1;margin-top:12px;text-align:center}
+.prot-total small{font-size:18px;color:var(--muted);margin-left:4px}
+.prot-add{display:flex;gap:8px;margin-top:14px}
+.prot-add input{
+  font-family:var(--data);font-size:15px;padding:8px;
+  border:2px solid var(--rail);border-radius:2px;background:#F7FAFB;color:var(--ink);min-width:0;
+}
+.prot-add input:focus{outline:none;border-color:var(--line);background:#fff}
+.prot-add .g{flex:0 0 84px}
+.prot-add .t{flex:1}
+.prot-add .btn{flex:0 0 auto;font-size:15px;padding:8px 14px}
+.prot-foods{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.prot-foods .food{position:relative}
+.prot-foods .food > button{
+  width:100%;height:100%;text-align:left;padding:10px 30px 10px 10px;
+  background:var(--card);border:2px solid var(--rail);border-radius:2px;color:var(--ink);cursor:pointer;
+  font-family:var(--body);font-size:14px;line-height:1.25;
+}
+.prot-foods .food > button small{display:block;font-family:var(--data);font-size:11px;color:var(--muted);margin-top:3px}
+.prot-foods .food > button[aria-pressed="true"]{background:var(--ball);border-color:var(--ink)}
+.prot-foods .food > button:focus-visible{outline:3px solid var(--line);outline-offset:2px}
+.prot-foods .n{position:absolute;top:6px;right:8px;font-family:var(--data);font-size:12px;font-weight:600;pointer-events:none}
+.prot-nav .day{position:relative}
+.prot-nav .day input{position:absolute;inset:0;width:100%;opacity:0;cursor:pointer}
+.prot-detail{margin-top:16px}
+.prot-detail .ctl-label{margin-bottom:2px}
+button.hist-row{width:100%;background:none;border:none;border-bottom:1px solid var(--rail);color:var(--ink);cursor:pointer;text-align:left}
+button.hist-row[aria-current="true"]{background:var(--ball)}
+.prot-del{margin-left:auto;background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:0 4px}
+
 /* ---------- lien fiche SmartWorkout ---------- */
 .swlink{
   display:inline-block;
@@ -546,8 +589,11 @@ svg .flr{stroke:var(--ink);stroke-width:2.6;stroke-linecap:round}
 
 <header>
   <div class="wrap">
-    <h1 class="brand">Prépa <span>padel</span></h1>
-    <div class="tag">8 semaines · élastiques · 2 séances/semaine</div>
+    <div>
+      <h1 class="brand">Prépa <span>padel</span></h1>
+      <div class="tag">8 semaines · élastiques · 2 séances/semaine</div>
+    </div>
+    <button type="button" class="prot-btn" id="btnProt">Protéines</button>
   </div>
 </header>
 
@@ -591,7 +637,7 @@ svg .flr{stroke:var(--ink);stroke-width:2.6;stroke-linecap:round}
     <input type="file" id="fileImport" accept="application/json" style="display:none">
   </div>
 
-  <div class="hist">
+  <div class="hist" id="sessHist">
     <h2>Séances enregistrées</h2>
     <div id="histList"></div>
   </div>
@@ -1001,7 +1047,7 @@ function effSets(base, week){
   return base;
 }
 
-let state = {duration:45, session:'A', start:null, checked:{}, logs:{}, history:[], daily:{}};
+let state = {duration:45, session:'A', start:null, checked:{}, logs:{}, history:[], daily:{}, protein:{}};
 
 /* ---------- semaine calculee depuis la date de depart ---------- */
 // 'YYYY-MM-DD' en heure locale (la date ISO de l'historique est en UTC)
@@ -1021,6 +1067,8 @@ function weekOf(date){
   return Math.max(1, Math.floor(days/7) + 1);
 }
 function curWeek(){ return weekOf(new Date()); }
+// vues hors seance : pas de duree, pas de semaine, pas de "Terminer"
+function isOff(s){ return s === 'M' || s === 'P'; }
 
 /**
  * Migration depuis l'ancien schema (semaine choisie a la main) : la date de
@@ -1029,6 +1077,7 @@ function curWeek(){ return weekOf(new Date()); }
  */
 function migrate(){
   delete state.week;
+  state.protein = state.protein || {};
   const h = state.history || [];
   if(!state.start && h.length){
     state.start = dayKey(h.reduce((m,x)=> x.date < m ? x.date : m, h[0].date));
@@ -1168,14 +1217,19 @@ function importData(file){
 /* ---------- render ---------- */
 function render(){
   setStorageBadge();
-  const isM = state.session === 'M';
+  const isM = isOff(state.session);
   document.getElementById('durWrap').style.display = isM ? 'none' : '';
   document.getElementById('weekWrap').style.display = isM ? 'none' : '';
   document.getElementById('note').style.display = isM ? 'none' : '';
   document.querySelector('.actions').style.display = isM ? 'none' : '';
   // #dataActions reste toujours visible
+  const isP = state.session === 'P';
+  document.querySelector('.controls').style.display = isP ? 'none' : '';
+  document.getElementById('sessHist').style.display = isP ? 'none' : '';
+  document.getElementById('btnProt').textContent = isP ? '‹ Séance' : 'Protéines';
+  if(isP){ renderProtein(); return; }
   document.getElementById('selSession').value = state.session;
-  if(isM){ renderMobility(); renderHistory(); return; }
+  if(state.session === 'M'){ renderMobility(); renderHistory(); return; }
 
   const segDur = document.getElementById('segDur');
   segDur.innerHTML = DURATIONS.map(d=>
@@ -1364,6 +1418,144 @@ function renderMobility(){
   });
 }
 
+/* ---------- proteines ---------- */
+let protDay = null; // jour affiche, non persiste : revient a aujourd'hui au rechargement
+let protOther = false; // saisie libre "Autre" depliee
+let protPage = 0;      // page du recap : 0 = les 7 derniers jours, 1 = les 7 d'avant...
+
+/* Portions types, valeurs moyennes (table Ciqual / etiquettes courantes), arrondies au gramme.
+   Le `t` sert aussi de cle pour compter les portions du jour : ne pas le renommer
+   sans accepter que les anciennes saisies ne soient plus reconnues. */
+const PROTEIN_FOODS = [
+  {t:'Skyr',                   g:18, portion:'200 g (8,8 g/100 g)'},
+  {t:'Skyr + granola',         g:27, portion:'200 g + granola (9 g)'},
+  {t:'Fromage',                g:8,  portion:'30 g, pâte dure'},
+  {t:'Œuf',                    g:6,  portion:'1 œuf (~55 g)'},
+  {t:'Sardines',               g:22, portion:'boîte égouttée ~90 g'},
+  {t:'Whey',                   g:23, portion:'1 dose'},
+  {t:'Tartine beurre cacahuète', g:7, portion:'pain + 15 g de beurre'},
+  {t:'Viande',                 g:27, portion:'100 g cuite'},
+  {t:'Poisson',                g:22, portion:'100 g cuit'},
+];
+
+function protTotal(day){ return (state.protein[day] || []).reduce((s, x)=>s + x.g, 0); }
+// page du recap qui contient ce jour
+function protPageOf(key){
+  return Math.floor(Math.round((new Date(todayKey()+'T00:00:00') - new Date(key+'T00:00:00')) / 86400000) / 7);
+}
+function shiftDay(key, n){
+  const d = new Date(key+'T00:00:00'); d.setDate(d.getDate()+n);
+  return dayKey(d);
+}
+
+/**
+ * Suivi des proteines : saisies en grammes par jour (state.protein['YYYY-MM-DD']
+ * = [{g, t}]), total du jour, navigation sur les jours passes pour rattraper un
+ * oubli, et recap des 7 derniers jours.
+ */
+function renderProtein(){
+  state.protein = state.protein || {};
+  const today = todayKey();
+  if(!protDay || protDay > today) protDay = today;
+  const items = state.protein[protDay] || [];
+  const label = protDay === today ? 'Aujourd’hui'
+    : new Date(protDay+'T00:00:00').toLocaleDateString('fr-FR',{weekday:'short', day:'2-digit', month:'2-digit'});
+  const host = document.getElementById('blocs');
+
+  // pagination par blocs de 7 jours, jusqu'au bloc qui contient la plus ancienne saisie
+  const first = Object.keys(state.protein).sort()[0] || today;
+  const span = Math.round((new Date(today+'T00:00:00') - new Date(first+'T00:00:00')) / 86400000);
+  const pages = Math.floor(Math.max(0, span) / 7) + 1;
+  protPage = Math.min(Math.max(protPage, 0), pages - 1);
+  const week = [];
+  for(let i=6;i>=0;i--) week.push(shiftDay(today, -(protPage*7 + i)));
+  const filled = week.filter(d=>protTotal(d) > 0);
+  const avg = filled.length ? Math.round(filled.reduce((s, d)=>s + protTotal(d), 0) / filled.length) : 0;
+
+  host.innerHTML = `
+    <div class="dose-head">
+      <div class="prot-nav hist-pager">
+        <button data-pd="-1" aria-label="Jour précédent">‹</button>
+        <span class="day">${label} ▾<input type="date" id="protDate" value="${protDay}" max="${today}" aria-label="Choisir un jour"></span>
+        <button data-pd="1" ${protDay===today?'disabled':''} aria-label="Jour suivant">›</button>
+      </div>
+      <div class="prot-total">${protTotal(protDay)}<small>g</small></div>
+      <div class="prot-foods">
+        ${PROTEIN_FOODS.map((f, i)=>{
+          const n = items.filter(x=>x.t===f.t).length;
+          return `<div class="food"><button type="button" data-food="${i}" aria-pressed="${n>0}">${f.t}
+            <small>${f.g} g · ${f.portion}</small></button>${n > 1 ? `<span class="n">×${n}</span>` : ''}</div>`;
+        }).join('')}
+        <div class="food"><button type="button" id="protOther" aria-pressed="${protOther}">Autre
+          <small>saisir les grammes</small></button></div>
+      </div>
+      ${protOther ? `<form class="prot-add" id="protForm">
+        <input class="g" id="protG" type="number" inputmode="numeric" min="1" max="300" placeholder="g" aria-label="Grammes de protéines">
+        <input class="t" id="protT" type="text" maxlength="40" placeholder="quoi (facultatif)" aria-label="Aliment">
+        <button class="btn" type="submit">Ajouter</button>
+      </form>` : ''}
+      <div class="prot-detail"><div class="ctl-label">Détail · ${label}</div>
+      ${items.length ? items.map((x, i)=>`<div class="hist-row">
+        <span class="s">${x.g} g</span><span>${escapeAttr(x.t || '')}</span>
+        <button class="prot-del" data-del="${i}" aria-label="Supprimer">✕</button>
+      </div>`).join('') : '<div class="empty">Rien de saisi pour ce jour.</div>'}
+      </div>
+    </div>
+    <div class="hist">
+      <h2>${protPage === 0 ? '7 derniers jours' : 'Du ' + fmtDate(week[0]+'T00:00:00') + ' au ' + fmtDate(week[6]+'T00:00:00')}</h2>
+      ${week.slice().reverse().map(d=>`<button type="button" class="hist-row" data-day="${d}" aria-current="${d===protDay}">
+        <span class="d">${d===today ? 'auj.' : fmtDate(d+'T00:00:00')}</span>
+        <span style="margin-left:auto">${protTotal(d) ? protTotal(d)+' g' : '—'}</span>
+      </button>`).join('')}
+      ${pages > 1 ? `<div class="hist-pager">
+        <button data-pp="-1" ${protPage===0?'disabled':''} aria-label="Jours plus récents">‹</button>
+        <span>${protPage+1} / ${pages}</span>
+        <button data-pp="1" ${protPage===pages-1?'disabled':''} aria-label="Jours plus anciens">›</button>
+      </div>` : ''}
+      <div class="streak">Moyenne des jours saisis · <b>${avg} g</b></div>
+    </div>`;
+
+  host.querySelectorAll('[data-pp]').forEach(b=>b.onclick=()=>{
+    protPage += Number(b.dataset.pp); render();
+  });
+  host.querySelectorAll('[data-pd]').forEach(b=>b.onclick=()=>{
+    protDay = shiftDay(protDay, Number(b.dataset.pd)); protPage = protPageOf(protDay); render();
+  });
+  host.querySelectorAll('[data-food]').forEach(b=>b.onclick=()=>{
+    const f = PROTEIN_FOODS[Number(b.dataset.food)];
+    (state.protein[protDay] = state.protein[protDay] || []).push({g:f.g, t:f.t});
+    save(); render();
+    flash(f.t + ' · +' + f.g + ' g');
+  });
+  // un jour du recap ou du calendrier devient le jour affiche : ajouts et suppressions s'y appliquent
+  host.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>{
+    protDay = b.dataset.day; render();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+  document.getElementById('protDate').onchange = (ev)=>{
+    if(ev.target.value){ protDay = ev.target.value; protPage = protPageOf(protDay); render(); }
+  };
+  host.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
+    items.splice(Number(b.dataset.del), 1);
+    if(!items.length) delete state.protein[protDay];
+    save(); render();
+  });
+  document.getElementById('protOther').onclick = ()=>{
+    protOther = !protOther; render();
+    if(protOther) document.getElementById('protG').focus();
+  };
+  if(protOther) document.getElementById('protForm').onsubmit = (ev)=>{
+    ev.preventDefault();
+    const g = Math.round(Number(document.getElementById('protG').value));
+    if(!(g > 0 && g <= 300)){ flash('Indique une quantité en grammes'); return; }
+    const t = document.getElementById('protT').value.trim();
+    (state.protein[protDay] = state.protein[protDay] || []).push(t ? {g, t} : {g});
+    protOther = false;
+    save(); render();
+    flash((t || 'Autre') + ' · +' + g + ' g');
+  };
+}
+
 function figLegend(svg){
   const parts = [];
   if(svg.includes('class="band"')) parts.push('<span><i></i>élastique</span>');
@@ -1503,8 +1695,16 @@ document.getElementById('tStop').onclick = ()=>{
 /* ---------- actions ---------- */
 document.getElementById('selSession').onchange = (ev)=>{
   const v = ev.target.value;
-  if(v !== 'M' && state.session !== 'M') state.checked = {};
+  if(!isOff(v) && !isOff(state.session)) state.checked = {};
   state.session = v; save(); render();
+};
+// Bascule rapide proteines <-> seance. state.session est persiste : l'app rouvre sur la
+// derniere vue utilisee, proteines comprises. lastView = la vue a retrouver en sortant.
+document.getElementById('btnProt').onclick = ()=>{
+  if(state.session === 'P') state.session = state.lastView || 'A';
+  else { state.lastView = state.session; state.session = 'P'; }
+  save(); render();
+  window.scrollTo({top:0});
 };
 document.getElementById('btnCycle').onclick = ()=>{
   if(!confirm('Repartir en semaine 1 à partir d\'aujourd\'hui ? L\'historique est conservé.')) return;
