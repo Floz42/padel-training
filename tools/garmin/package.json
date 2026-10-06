@@ -1,0 +1,11 @@
+{
+  "name": "padel-garmin-export",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "export": "node export-fit.mjs"
+  },
+  "dependencies": {
+    "@garmin/fitsdk": "^21.217.0"
+  }
+}
