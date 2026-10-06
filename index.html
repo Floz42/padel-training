@@ -663,12 +663,11 @@ const SW_GROUPS = {pectoraux:'pectoraux', dos:'dos', epaule:'épaules', bras:'br
 
 const PROGRAM = {
   A: [
-    {bloc:'Échauffement', id:'planche', name:'Planche', detail:'activation', sets:{30:2}, reps:'30 s', tier:30, warm:true, sw:'abdos',
-      note:'Activation, pas une série à l’échec : tu t’arrêtes à 30 s même si tu pouvais tenir plus. Un tronc épuisé dès le départ dégrade tout ce qui suit.'},
+    {bloc:'Échauffement', id:'planche', name:'Planche', detail:'activation', sets:{30:2}, reps:'40 s', rest:30, tier:30, warm:true, sw:'abdos',
+      note:'Activation, pas une série à l’échec : tu t’arrêtes à 40 s même si tu pouvais tenir plus. Un tronc épuisé dès le départ dégrade tout ce qui suit.'},
+    {bloc:'Échauffement', id:'planche-lat', name:'Planche latérale', detail:'activation', sets:{30:3}, reps:'30 s / côté', rest:30, tier:30, warm:true, sw:'abdos',
+      note:'Enchaînée juste après la planche, même logique : activation, pas d’échec. Bassin aligné — s’il descend, tu arrêtes la série.'},
     {bloc:'Échauffement', id:'warm-arm-circles', name:'Cercles de bras', sets:{30:1}, reps:'10 avant / 10 arrière', tier:30, warm:true, sw:'epaule'},
-    {bloc:'Échauffement', id:'warm-pass', name:'Passe-barre épaules élastique', detail:'élastique léger', sets:{30:1}, reps:'10', tier:30, warm:true, sw:'epaule'},
-    {bloc:'Échauffement', id:'rot-ext', name:'Rotation externe d’épaule', detail:'coiffe des rotateurs', sets:{30:2}, reps:'15 / bras', tier:30, warm:true, sw:'epaule',
-      note:'Jamais sautée, même en 30 min. C’est ce qui encaisse les smashes répétés.'},
     {bloc:'Rotation', id:'chop', name:'Chop diagonal élastique', detail:'ancrage haut', sets:{30:2,45:3,60:3}, reps:'10 / côté', rest:60, tier:30, sw:'abdos',
       note:'Le geste du smash. La puissance part des jambes et passe par le tronc : tu tournes les hanches, tu ne tires pas avec les bras.'},
     {bloc:'Force', id:'dev-couche', name:'Développé Debout', detail:'ancrage porte · poignées ou barre', sets:{30:3,45:4,60:4}, reps:'8–10', rest:90, tier:30, swid:'1963663', sw:'pectoraux'},
@@ -679,10 +678,10 @@ const PROGRAM = {
       note:'Remplace les pompes : les poignées gardent le poignet dans l’axe, sans l’écrasement de l’appui au sol. Coudes légèrement fléchis et figés — c’est l’épaule qui ouvre et ferme, jamais le coude.'},
     {bloc:'Force', id:'dev-mil', name:'Développé Militaire Assis', detail:'assis, élastique sous les pieds', sets:{45:3,60:3}, reps:'10', rest:60, tier:45, swid:'1962143', sw:'epaule',
       note:'Assis, tu ne peux pas compenser en cambrant le bas du dos — c’est tout l’intérêt par rapport au debout. Si tu dois te pencher en arrière pour finir la rep, l’élastique est trop résistant.'},
-    {bloc:'Gainage', id:'planche-lat', name:'Planche latérale', sets:{45:2,60:3}, reps:'30 s / côté', rest:45, tier:45, sw:'abdos'},
-    {bloc:'Force', id:'pullover', name:'Pull Over', detail:'ancrage haut · dos à la porte', sets:{60:3}, reps:'12', rest:60, tier:60, swid:'1963507', sw:'dos',
+    {bloc:'Force', id:'pullover',name:'Pull Over', detail:'ancrage haut · dos à la porte', sets:{60:3}, reps:'12', rest:60, tier:60, swid:'1963507', sw:'dos',
       note:'C’est le freinage du bras après le smash. Coudes presque tendus et figés : le mouvement part de l’épaule, en arc, jusqu’aux cuisses. Si les coudes plient pour finir la rep, tu fais du triceps — allège.'},
-    {bloc:'Force', id:'face-pull', name:'Face Pull', detail:'ancrage au-dessus de la tête', sets:{60:3}, reps:'15', rest:45, tier:60, swid:'1962142', sw:'epaule'},
+    {bloc:'Force', id:'face-pull', name:'Face Pull', detail:'ancrage au-dessus de la tête', sets:{30:2,45:3,60:3}, reps:'15', rest:45, tier:30, swid:'1962142', sw:'epaule',
+      note:'Seul travail de la coiffe des rotateurs de la séance : jamais sauté, même en 30 min. C’est ce qui encaisse les smashes répétés. Coudes hauts, mains qui finissent à hauteur des oreilles.'},
     {bloc:'Force', id:'curl', name:'Biceps Curl', detail:'coudes collés aux côtes', sets:{60:2}, reps:'12', rest:45, tier:60, swid:'1961995', sw:'bras'},
     {bloc:'Force', id:'triceps', name:'Triceps Extension Poulie Haute', detail:'coudes fixes', sets:{60:2}, reps:'12', rest:45, tier:60, swid:'1961565', sw:'bras'},
     {bloc:'Force', id:'curl-pronation', name:'Biceps Curl Pronation', detail:'paumes vers le bas', sets:{60:2}, reps:'12', rest:45, tier:60, swid:'1961998', sw:'bras',
@@ -691,12 +690,11 @@ const PROGRAM = {
       note:'Même cible que le curl pronation, en isolé. Lent dans les deux sens, surtout à la descente. Une gêne au coude pendant la série, pas après : tu arrêtes, ce n’est pas le moment d’insister.'}
   ],
   B: [
-    {bloc:'Échauffement', id:'planche', name:'Planche', detail:'activation', sets:{30:2}, reps:'30 s', tier:30, warm:true, sw:'abdos',
+    {bloc:'Échauffement', id:'planche', name:'Planche', detail:'activation', sets:{30:2}, reps:'40 s', rest:30, tier:30, warm:true, sw:'abdos',
       note:'Activation, pas une série à l’échec. Un tronc pré-fatigué encaisse mal les réceptions de pliométrie.'},
-    {bloc:'Échauffement', id:'warm-monster', name:'Abduction', detail:'élastique aux chevilles, pas latéraux', sets:{30:1}, reps:'20 pas', tier:30, warm:true, swid:'1961935', sw:'jambes',
-      note:'Réveille les fessiers et la stabilité latérale du genou — exactement ce que la pliométrie va solliciter.'},
+    {bloc:'Échauffement', id:'planche-lat', name:'Planche latérale', detail:'activation', sets:{30:3}, reps:'30 s / côté', rest:30, tier:30, warm:true, sw:'abdos',
+      note:'Enchaînée juste après la planche, même logique : activation, pas d’échec. Bassin aligné — s’il descend, tu arrêtes la série.'},
     {bloc:'Échauffement', id:'warm-squat', name:'Squat', detail:'à vide, sans élastique', sets:{30:1}, reps:'15', tier:30, warm:true, swid:'1962158', sw:'jambes'},
-    {bloc:'Échauffement', id:'warm-lunge', name:'Fentes', detail:'avec rotation du buste', sets:{30:1}, reps:'5 / côté', tier:30, warm:true, swid:'1962000', sw:'jambes'},
     {bloc:'Pliométrie', id:'squat-jump', name:'Squat jumps', sets:{30:3}, reps:'6', rest:90, tier:30},
     {bloc:'Pliométrie', id:'skater', name:'Skater jumps', detail:'bonds latéraux', sets:{30:3}, reps:'6 / côté', rest:90, tier:30,
       note:'Le plus spécifique padel avec le départ 3 m. Si la réception devient molle, la série est finie.'},
@@ -709,14 +707,13 @@ const PROGRAM = {
     {bloc:'Force', id:'mollets', name:'Extension Mollet', detail:'descente lente en 3 s', sets:{30:2,45:3,60:3}, reps:'20', rest:45, tier:30, swid:'1961999', sw:'jambes'},
     {bloc:'Force', id:'sdt', name:'Soulevé de Terre', detail:'version roumaine, jambes semi-tendues', sets:{45:3,60:3}, reps:'12', rest:60, tier:45, swid:'1962157', sw:'jambes'},
     {bloc:'Gainage', id:'pallof', name:'Pallof press élastique', detail:'anti-rotation', sets:{45:2,60:3}, reps:'12 / côté', rest:45, tier:45, sw:'abdos'},
-    {bloc:'Force', id:'bulgare', name:'Fentes Bulgares', detail:'pied arrière sur chaise', sets:{60:3}, reps:'10 / jambe', rest:60, tier:60, swid:'1962001', sw:'jambes'},
-    {bloc:'Cardio', id:'intervalles', name:'Intervalles 20 s / 40 s', sets:{60:1}, reps:'8 min', rest:0, tier:60}
+    {bloc:'Force', id:'bulgare', name:'Fentes Bulgares', detail:'pied arrière sur chaise', sets:{60:3}, reps:'10 / jambe', rest:60, tier:60, swid:'1962001', sw:'jambes'}
   ]
 };
 
 const BLOC_ORDER = {
-  A:['Échauffement','Rotation','Force','Gainage'],
-  B:['Échauffement','Pliométrie','Rotation','Force','Gainage','Cardio']
+  A:['Échauffement','Rotation','Force'],
+  B:['Échauffement','Pliométrie','Rotation','Force','Gainage']
 };
 const BLOC_META = {
   'Échauffement':'2 à 3 min, avant tout le reste',
@@ -769,29 +766,6 @@ const FIGURES = {
       + '<circle class="traj" cx="88" cy="26" r="10"/>'
       + '<path class="arr" d="M26 17 Q34 14 40 20"/>',
     cap: 'Debout, bras tendus sur les côtés à hauteur d’épaules. Dix cercles vers l’avant, dix vers l’arrière, en augmentant l’amplitude au fil des reps. C’est la toute première chose que tu fais, avant même de toucher un élastique.'
-  },
-  'warm-pass': {
-    svg: FRONT
-      + '<path class="b" d="M60 29 L36 14"/><path class="b" d="M60 29 L84 14"/>'
-      + '<path class="band" d="M36 14 Q60 5 84 14"/>'
-      + '<path class="arr" d="M96 20 Q104 32 96 44"/>',
-    cap: 'Élastique tenu à deux mains, bras tendus, mains beaucoup plus larges que les épaules. Tu passes lentement l’élastique de l’avant vers l’arrière au-dessus de la tête, sans jamais plier les coudes. Si ça bloque, écarte les mains — jamais forcer.'
-  },
-  'warm-monster': {
-    svg: FRONT
-      + '<path class="band" d="M48 88 Q60 82 72 88"/>'
-      + '<path class="arr" d="M84 80 L108 80"/>'
-      + '<text x="6" y="50">demi-squat</text>',
-    cap: 'Élastique autour des chevilles, pieds écartés largeur de bassin, léger demi-squat. Tu avances par pas latéraux en gardant la tension sur l’élastique. Les genoux ne rentrent jamais vers l’intérieur — c’est tout l’intérêt du mouvement.'
-  },
-  'warm-lunge': {
-    svg: '<circle class="hd" cx="50" cy="20" r="7"/><path class="b" d="M50 27 L50 52"/>'
-      + '<path class="b" d="M50 52 L70 68 L70 92"/>'
-      + '<path class="b" d="M50 52 L34 74 L28 92"/>'
-      + '<path class="b" d="M50 33 L68 30"/>'
-      + '<path class="arr" d="M74 26 Q90 30 94 44"/>'
-      + '<text x="4" y="44">genou bas</text>',
-    cap: 'Grande fente avant, genou arrière proche du sol, buste vertical. Une fois en position, tu fais pivoter le buste du côté de la jambe avant, bras tendu. Ça ouvre la hanche et le tronc d’un coup — les deux zones que la séance va solliciter.'
   },
   'chop': {
     svg: FRONT
@@ -899,14 +873,6 @@ const FIGURES = {
       + '<path class="arr" d="M84 56 L84 36"/>',
     cap: 'Debout sur l\u2019élastique, bras le long du corps, paumes vers l\u2019avant. Coudes collés aux côtes pendant tout le mouvement — seul l\u2019avant-bras monte.'
   },
-  'rot-ext': {
-    svg: FRONT
-      + '<path class="b" d="M60 31 L70 44 L56 46"/>'
-      + '<rect class="anch" x="6" y="30" width="6" height="30"/>'
-      + '<path class="band" d="M12 45 L56 46"/>'
-      + '<path class="arr" d="M62 56 Q80 58 88 46"/>',
-    cap: 'Élastique ancré sur le côté, à hauteur de coude. Coude collé aux côtes, fléchi à 90°, main devant le nombril. Tu ouvres vers l\u2019extérieur sans décoller le coude — amplitude courte, mouvement lent.'
-  },
   'squat-elast': {
     svg: FRONT
       + '<path class="b" d="M60 31 L50 40 L52 29"/><path class="b" d="M60 31 L70 40 L68 29"/>'
@@ -997,17 +963,6 @@ const FIGURES = {
       + '<path class="traj" d="M36 52 L96 90"/>',
     cap: 'Sur le côté, coude sous l\u2019épaule, pieds superposés. Les hanches montent jusqu\u2019à former une ligne droite et ne redescendent pas pendant la série. Si le bassin s\u2019affaisse, tu arrêtes le chrono.'
   },
-  'intervalles': {
-    svg: '<rect class="be" x="12" y="40" width="14" height="40"/>'
-      + '<rect class="br" x="26" y="68" width="26" height="12"/>'
-      + '<rect class="be" x="52" y="40" width="14" height="40"/>'
-      + '<rect class="br" x="66" y="68" width="26" height="12"/>'
-      + '<rect class="be" x="92" y="40" width="14" height="40"/>'
-      + '<path class="flr" d="M8 80 L112 80"/>'
-      + '<text x="10" y="36">20 s</text><text x="32" y="64">40 s récup</text>'
-      + '<text x="8" y="92">× 10 à 12 tours</text>',
-    cap: 'Alternance 20 secondes d\u2019effort maximal et 40 secondes de récupération active, 10 à 12 fois. Corde à sauter, montées de genoux ou vélo. Le format colle au profil du padel : échanges brefs, récup entre les points.'
-  },
   'ecarte': {
     svg: FRONT
       + '<rect class="anch" x="52" y="2" width="16" height="3"/>'
@@ -1018,9 +973,9 @@ const FIGURES = {
   }
 };
 const DURATIONS = [
-  {v:30, real:{A:'≈ 32 min', B:'≈ 33 min'}},
-  {v:45, real:{A:'≈ 45 min', B:'≈ 54 min'}},
-  {v:60, real:{A:'≈ 60 min', B:'≈ 70 min'}}
+  {v:30, real:{A:'≈ 39 min', B:'≈ 38 min'}},
+  {v:45, real:{A:'≈ 49 min', B:'≈ 59 min'}},
+  {v:60, real:{A:'≈ 59 min', B:'≈ 66 min'}}
 ];
 
 const WEEK_NOTES = {

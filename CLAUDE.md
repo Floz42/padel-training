@@ -224,12 +224,17 @@ principal de ce fichier de données.
 
 | Séance | Ordre des blocs |
 |---|---|
-| A — haut du corps | Échauffement › Rotation › Force › Gainage |
-| B — explosivité | Échauffement › Pliométrie › Rotation › Force › Gainage › Cardio |
+| A — haut du corps | Échauffement › Rotation › Force |
+| B — explosivité | Échauffement › Pliométrie › Rotation › Force › Gainage |
 
-- **Échauffement** : 2 à 3 min, présent dans les trois formats, jamais optionnel. Démarre par
-  la planche en activation (habitude de Flo) — volontairement courte et **pas à l'échec** :
-  un tronc épuisé dès le départ dégrade la force et la réception en pliométrie.
+- **Échauffement** : présent dans les trois formats, jamais optionnel. Démarre par la planche
+  **puis la planche latérale** en activation (habitude de Flo, dans les deux séances) —
+  volontairement courtes et **pas à l'échec** : un tronc épuisé dès le départ dégrade la force
+  et la réception en pliométrie. Passe-barre, rotation externe, abduction et fentes
+  d'échauffement retirés à la demande de Flo (2026-10-06).
+- **Coiffe des rotateurs** : depuis le retrait de la rotation externe, le **face pull est le
+  seul travail de coiffe** de la séance A. Il est donc en `tier:30` (présent dans les trois
+  formats) — ne jamais le repasser en option.
 - **Rotation** : le geste du padel (chop en A, twist en B). À faire frais, avant la fatigue.
   Le chop est en `tier:30` — c'est le mouvement le plus spécifique, il ne saute jamais.
 - **Pliométrie toujours en premier** dans le corps de séance B, jambes fraîches.
@@ -303,9 +308,9 @@ fait couper au rendu, sans la moindre erreur console.
 - `render()` reconstruit tout le DOM au moindre clic, ce qui referme les schémas dépliés.
 - L'import JSON ne valide rien et `log.load` ressort en `innerHTML` non échappé (self-XSS).
 - `SVG_HEAD` répète `<marker id="ah">` dans chaque carte — ids dupliqués dans le DOM.
-- Séance B en 60 min tourne à ≈ 57 min de travail pur, soit ≈ 62-65 min réelles avec les
-  transitions. Les intervalles (8 min) sont conservés par choix de Flo — ne pas les retirer pour
-  rentrer dans le budget. Le volume pliométrique est calé à 96 contacts au sol en 45 et 60
+- Les intervalles (cardio) ont été retirés de la séance B à la demande de Flo (2026-10-06).
+  Les durées réelles de `DURATIONS` ont été ré-estimées à la main après ce changement, à
+  vérifier à l'usage. Le volume pliométrique est calé à 96 contacts au sol en 45 et 60
   (126 en semaines 5-6 avec les +2 reps) ; ne pas le remonter.
 - Aucun suivi du poids corporel, alors que la perte de gras est un objectif déclaré.
   Le suivi des protéines (vue P) n'a pas d'objectif chiffré pour cette raison : sans poids,

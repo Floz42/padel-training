@@ -13,8 +13,6 @@ exactement comme dans l'app, et poser les liens `swid` vers les vidéos.
 |---|---|---|
 | `planche` | — | — |
 | `warm-arm-circles` | — | — |
-| `warm-pass` | — | — |
-| `rot-ext` | — | — |
 | `chop` | — | — |
 | `dev-couche` | Développé Debout | 1963663 |
 | `tirage` | Tirage Horizontal Prise Large | 1963501 |
@@ -28,9 +26,7 @@ exactement comme dans l'app, et poser les liens `swid` vers les vidéos.
 | `curl-pronation` | Biceps Curl Pronation | 1961998 |
 | `wrist-ext` | — | — |
 | `planche-lat` | — | — |
-| `warm-monster` | Abduction | 1961935 |
 | `warm-squat` | Squat | 1962158 |
-| `warm-lunge` | Fentes | 1962000 |
 | `squat-jump` | — | — |
 | `skater` | — | — |
 | `depart` | — | — |
@@ -41,21 +37,19 @@ exactement comme dans l'app, et poser les liens `swid` vers les vidéos.
 | `sdt` | Soulevé de Terre | 1962157 |
 | `bulgare` | Fentes Bulgares | 1962001 |
 | `pallof` | — | — |
-| `intervalles` | — | — |
 
 ### Sans correspondance, et c'est définitif
 
 SmartWorkout est une marque d'élastiques : sa bibliothèque ne contient **ni gainage,
-ni rotation du tronc, ni pliométrie, ni cardio**. Les exercices suivants gardent donc
+ni rotation du tronc, ni pliométrie**. Les exercices suivants gardent donc
 mon intitulé et n'ont que leur schéma — ne pas leur coller un exercice approchant,
 la vidéo montrerait autre chose :
 
 - **Gainage** : planche, planche latérale, Pallof press
 - **Rotation** : chop diagonal, twist horizontal (le geste du padel)
 - **Pliométrie** : squat jumps, skater jumps, départs 3 m
-- **Épaule** : cercles de bras, passe-barre, rotation externe (aucun travail de coiffe chez eux)
-- **Avant-bras** : extension de poignet (aucun exercice d'avant-bras au catalogue)
-- **Cardio** : intervalles 20/40
+- **Épaule** : cercles de bras
+- **Avant-bras** : extension de poignet (aucun exercice d'avant-bras au catalogue)
 
 ## La bibliothèque complète
 
