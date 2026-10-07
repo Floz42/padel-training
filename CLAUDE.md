@@ -133,9 +133,9 @@ curl -s -o /dev/null -w "%{http_code}" https://smartworkout-pro.com/pages/exerci
 « Tirage Horizontal Prise Large », « Fentes Rebonds »…), pour que l'intitulé affiché
 corresponde mot pour mot à la vidéo. Ne pas les franciser autrement ni les reformuler.
 
-Douze exercices n'ont **aucun** équivalent et n'en auront pas : la bibliothèque SmartWorkout ne
-contient ni gainage, ni rotation du tronc, ni pliométrie, ni cardio, ni travail de coiffe des
-rotateurs, ni avant-bras — c'est une marque d'élastiques. Ils gardent leur intitulé et leur schéma. Ne pas
+Dix exercices n'ont **aucun** équivalent et n'en auront pas : la bibliothèque SmartWorkout ne
+contient ni gainage, ni rotation du tronc, ni pliométrie, ni avant-bras — c'est une marque
+d'élastiques. Ils gardent leur intitulé et leur schéma. Ne pas
 leur coller un mouvement approchant du catalogue : la vidéo montrerait autre chose. Le détail
 par exercice est dans [`SMARTWORKOUT-IDS.md`](SMARTWORKOUT-IDS.md).
 
@@ -160,7 +160,6 @@ Classes CSS disponibles (définies l. 440-455) :
 | `.arr` | sens du mouvement (pointillé + flèche) |
 | `.traj` | trajectoire ou repère d'alignement |
 | `.flr` | repère au sol / pied |
-| `.be` `.br` | blocs effort / récup (schéma intervalles) |
 | `.gr` | ligne de sol (fournie par `SVG_HEAD`) |
 
 `SIDE` et `FRONT` sont des corps de référence réutilisables (profil / face). La légende sous
@@ -309,9 +308,32 @@ fait couper au rendu, sans la moindre erreur console.
 - L'import JSON ne valide rien et `log.load` ressort en `innerHTML` non échappé (self-XSS).
 - `SVG_HEAD` répète `<marker id="ah">` dans chaque carte — ids dupliqués dans le DOM.
 - Les intervalles (cardio) ont été retirés de la séance B à la demande de Flo (2026-10-06).
-  Les durées réelles de `DURATIONS` ont été ré-estimées à la main après ce changement, à
-  vérifier à l'usage. Le volume pliométrique est calé à 96 contacts au sol en 45 et 60
+  Les durées réelles de `DURATIONS` ont été recalculées par différence avec les anciennes
+  valeurs (même méthode d'estimation sur l'ancien et le nouveau programme), à vérifier à l'usage.
+  Le volume pliométrique est calé à 96 contacts au sol en 45 et 60
   (126 en semaines 5-6 avec les +2 reps) ; ne pas le remonter.
 - Aucun suivi du poids corporel, alors que la perte de gras est un objectif déclaré.
   Le suivi des protéines (vue P) n'a pas d'objectif chiffré pour cette raison : sans poids,
   pas de cible en g/kg.
+
+## Export Garmin
+
+`tools/garmin/` génère les séances en fichiers d'entraînement `.fit` (SDK officiel `@garmin/fitsdk`,
+dépendance propre au dossier, l'app n'en dépend pas). Le script lit `PROGRAM` directement dans
+`index.html` : l'app reste la seule source de vérité.
+
+```bash
+cd tools/garmin && npm install
+node export-fit.mjs A 45 7     # une séance (session, format, semaine)
+node export-fit.mjs all 7      # bloc en cours : A/B × 30/45/60 pour la semaine 7 (usage normal)
+node export-fit.mjs all        # A/B × 30/45/60 × blocs de semaines 1, 3, 5, 7, 9
+node check-fit.mjs dist/PADEL_A45_S7.FIT   # relit le fichier pour contrôle
+```
+
+Copie sur la montre (Forerunner 165 Music) : USB, dossier `GARMIN/NewFiles`. Les charges
+(bandes) ne sont **pas** exportées : elles changent trop souvent et des kg n'ont pas de sens
+pour un élastique — le suivi reste dans l'app. Toute modification de `PROGRAM` (nouvel `id`)
+demande d'ajouter sa correspondance dans `GARMIN` de `export-fit.mjs`, sinon l'exercice sort
+sans catégorie Garmin (nom affiché, pas de comptage de reps). Chaque fichier a son propre
+`serialNumber` : la montre identifie un fichier par son FILE_ID, et des fichiers générés dans la
+même seconde avec le même numéro s'écrasent entre eux à l'import.
