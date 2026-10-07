@@ -3,6 +3,7 @@
  *
  * Usage: node export-fit.mjs [session=A|B] [duration=30|45|60] [week=1..9]
  *   node export-fit.mjs A 45 7   -> dist/PADEL_A45_S7.FIT
+ *   node export-fit.mjs all 7    -> A/B x 30/45/60 for week 7 (the current block)
  *   node export-fit.mjs all      -> every session x duration x week block
  *
  * The program is read straight from ../../index.html (const PROGRAM), so the app
@@ -27,8 +28,6 @@ const cat = (name) => Number(Object.keys(C).find((k) => C[k] === name))
 const GARMIN = {
   planche: ['plank', 43], // plank
   'warm-arm-circles': ['warmUp', 5], // armCircles
-  'warm-pass': ['warmUp', 17], // shoulderCircles
-  'rot-ext': ['shoulderStability', 1], // bandExternalRotation
   chop: ['chop', 2], // cableWoodchop
   'dev-couche': ['pushUp', 0], // chestPressWithBand
   tirage: ['row', 1], // cableRowStanding
@@ -42,9 +41,7 @@ const GARMIN = {
   triceps: ['tricepsExtension', 39], // tricepsPressdown
   'curl-pronation': ['curl', 31], // reverseGripBarbellBicepsCurl
   'wrist-ext': ['curl', 17], // dumbbellReverseWristCurl
-  'warm-monster': ['hipStability', 11], // lateralWalksWithBandAtAnkles
   'warm-squat': ['squat', 61], // squat
-  'warm-lunge': ['lunge', 32], // lunge
   'squat-jump': ['plyo', 3], // bodyWeightJumpSquat
   skater: ['plyo', 17], // lateralLeapAndHop
   depart: ['run', 3], // sprint
@@ -96,6 +93,19 @@ const parsePrescription = (reps, week, id) => {
    raw fields are written instead, and time durations are stored in milliseconds. */
 const ms = (seconds) => seconds * 1000
 
+/**
+ * Truncates a string to a UTF-8 byte budget (FIT string fields max out at 255 bytes,
+ * and accented characters take 2-3 bytes), without cutting a character in half.
+ */
+const fitString = (text, maxBytes) => {
+  let out = ''
+  for (const ch of text) {
+    if (Buffer.byteLength(out + ch) > maxBytes - 1) return out.trimEnd() + '…'
+    out += ch
+  }
+  return out
+}
+
 const weekHint = (id, week) => {
   if (week >= 7 && week <= 8 && ['dev-couche', 'tirage'].includes(id)) return 'Tempo : 3 s à la descente.'
   if (week <= 2) return 'Semaines 1-2 : élastique léger.'
@@ -113,8 +123,8 @@ const buildSteps = (program, session, duration, week) => {
     if (!sets) continue
 
     const p = parsePrescription(e.reps, week, e.id)
-    const name = `${e.name}${p.perSide ? ' (par côté)' : ''}`.slice(0, 50)
-    const notes = [e.detail, weekHint(e.id, week), e.note].filter(Boolean).join(' · ').slice(0, 250)
+    const name = fitString(`${e.name}${p.perSide ? ' (par côté)' : ''}`, 60)
+    const notes = fitString([e.detail, weekHint(e.id, week), e.note].filter(Boolean).join(' · '), 250)
     const garmin = GARMIN[e.id]
 
     const exercise = {
@@ -148,12 +158,15 @@ const writeWorkout = (program, session, duration, week) => {
   const wktName = `Padel ${session} ${duration}' S${week}`
   const encoder = new Encoder()
 
+  /* The watch identifies a file by its FILE_ID (manufacturer + product + serial + timeCreated):
+     files sharing one are treated as the same workout and overwrite each other. "all" writes
+     six files within the same second, so the serial must differ per session/format/week. */
   encoder.onMesg(Profile.MesgNum.FILE_ID, {
     type: 'workout',
     manufacturer: 'development',
     product: 0,
     timeCreated: new Date(),
-    serialNumber: 1234,
+    serialNumber: (session === 'A' ? 1 : 2) * 10000 + duration * 100 + week,
   })
   encoder.onMesg(Profile.MesgNum.WORKOUT, {
     wktName,
@@ -181,9 +194,10 @@ const program = loadProgram()
 const [session = 'A', duration = '45', week = '3'] = process.argv.slice(2)
 
 if (session === 'all') {
-  // One file per week block: 1-2, 3-4, 5-6, 7-8, 9
+  // "all 7" -> A/B x 30/45/60 for that week only; "all" -> also every week block (1, 3, 5, 7, 9)
+  const weeks = process.argv[3] ? [Number(process.argv[3])] : [1, 3, 5, 7, 9]
   for (const s of Object.keys(program))
-    for (const d of [30, 45, 60]) for (const w of [1, 3, 5, 7, 9]) writeWorkout(program, s, d, w)
+    for (const d of [30, 45, 60]) for (const w of weeks) writeWorkout(program, s, d, w)
 } else {
   writeWorkout(program, session, Number(duration), Number(week))
 }
