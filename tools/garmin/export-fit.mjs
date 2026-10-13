@@ -54,12 +54,21 @@ const GARMIN = {
   bulgare: ['lunge', 18], // dumbbellBulgarianSplitSquat
 }
 
-/** Evaluates the PROGRAM object literal from the app source. */
+/**
+ * Evaluates the PROGRAM object literal from the app source, with each session reordered
+ * the way the app renders it: bloc by bloc following BLOC_ORDER, source order within a bloc.
+ */
 const loadProgram = () => {
   const html = readFileSync(APP, 'utf8')
   const m = html.match(/const PROGRAM = (\{[\s\S]*?\n\});/)
   if (!m) throw new Error('PROGRAM introuvable dans index.html')
-  return new Function(`return ${m[1]}`)()
+  const o = html.match(/const BLOC_ORDER = (\{[\s\S]*?\});/)
+  if (!o) throw new Error('BLOC_ORDER introuvable dans index.html')
+  const program = new Function(`return ${m[1]}`)()
+  const order = new Function(`return ${o[1]}`)()
+  for (const s of Object.keys(program))
+    program[s] = order[s].flatMap((bloc) => program[s].filter((e) => e.bloc === bloc))
+  return program
 }
 
 /* Same rules as effSets() / WEEK_NOTES in the app. */
@@ -123,7 +132,10 @@ const buildSteps = (program, session, duration, week) => {
     if (!sets) continue
 
     const p = parsePrescription(e.reps, week, e.id)
-    const name = fitString(`${e.name}${p.perSide ? ' (par côté)' : ''}`, 60)
+    // A single-rep step reads as "1 reps" on the watch: spell out the set count and rest instead
+    const single = p.kind === 'reps' && p.value === 1 && sets > 1
+    const suffix = single ? ` (×${sets}, ${e.rest} s récup)` : p.perSide ? ' (par côté)' : ''
+    const name = fitString(`${e.name}${suffix}`, 60)
     const notes = fitString([e.detail, weekHint(e.id, week), e.note].filter(Boolean).join(' · '), 250)
     const garmin = GARMIN[e.id]
 
