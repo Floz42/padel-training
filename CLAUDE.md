@@ -47,7 +47,7 @@ vers Vue/Nuxt, ne pas ajouter de bundler, ne pas introduire de package npm.
 
 | Fichier | Rôle |
 |---|---|
-| `index.html` | Toute l'app : CSS (l. 15-541), markup (l. 543-607), JS (l. 609-1513) |
+| `index.html` | Toute l'app : CSS dans `<style>`, markup, puis JS dans l'unique `<script>` |
 | `sw.js` | Service worker cache-first, offline |
 | `manifest.webmanifest` | PWA : icônes, `display: standalone`, raccourcis |
 | `icon*.png` / `icon.svg` | Icônes |
@@ -149,7 +149,7 @@ Champs : `bloc` (∈ `MOB_BLOCS`), `name`, `presc`, `when`, `detail`.
 Un schéma par exercice, clé = `id` de l'exercice. `viewBox="0 0 120 100"`, préfixé par
 `SVG_HEAD` (defs du marqueur de flèche + ligne de sol) et fermé par `</svg>` au render.
 
-Classes CSS disponibles (définies l. 440-455) :
+Classes CSS disponibles (section « schémas position de départ » du CSS) :
 
 | Classe | Usage |
 |---|---|
@@ -315,6 +315,42 @@ fait couper au rendu, sans la moindre erreur console.
 - Aucun suivi du poids corporel, alors que la perte de gras est un objectif déclaré.
   Le suivi des protéines (vue P) n'a pas d'objectif chiffré pour cette raison : sans poids,
   pas de cible en g/kg.
+
+## Profil Chloé
+
+Toggle **Flo / Chloé** dans le header. Profil actif mémorisé sous `prepa-profile`, et
+**chaque profil a sa propre clé de données** : Flo `padel-prep-v1` (inchangée), Chloé
+`prepa-chloe-v1`. `setProfile()` sauvegarde immédiatement le profil quitté puis recharge
+l'autre. Tout ce qui dépend du profil passe par `P()` (= `PROFILES[profile]`) : programme,
+`blocOrder`, `blocMeta`, durées, `weekNote`, `effSets`, clé, nom d'export.
+
+Chloé : débutante sédentaire, sans contrainte articulaire, objectif fessiers, **3 séances/semaine**.
+Une seule séance `F`, formats **10 / 20 / 30** (`tier` 10/20/30), pas de vues M/P
+(`offViews:false`). `PROGRAM_CHLOE` suit le même schéma que `PROGRAM`, plus un champ
+`band:{learn, base}` (repère d'élastique conseillé en S1-2 puis ensuite, archivé au
+« Terminer » si rien n'est saisi). `effSetsChloe` est en pratique identique à `effSets` (plancher 2 en S1-2, demandé par Flo pour
+que le format 10 min reste plein), gardée séparée pour pouvoir diverger.
+Conseils statiques dans `TIPS_CHLOE` (volet `<details>`, rendu au chargement seulement).
+`PROGRAM` et `BLOC_ORDER` doivent garder leur nom exact : `export-fit.mjs` les extrait par
+regex, et les variantes `_CHLOE` ne sont pas exportées sur Garmin.
+
+## Partage avec Claude
+
+Pour les deux profils : le partage de séance est proposé dans le **modal `#finishDlg`** ouvert
+par « Terminer » (le bouton du modal fournit le geste utilisateur exigé par `navigator.share`),
+et un bouton « Faire un récap » reste sous la séance. Partage de séance (`lastSessionText()` : dernière
+séance terminée, exercices retrouvés dans `logHist` par **horodatage identique** à l'entrée
+d'`history`) et « Faire un récap » (`recapText()` : cycle depuis `state.start`, séances par
+semaine, élastique début → fin par exercice, protéines pour Flo). Chaque texte embarque le
+`context` du profil et la question à poser. `shareWithClaude()` : sur mobile
+(`pointer:coarse`), feuille de partage native (`navigator.share`, on choisit l'app Claude) ;
+sur PC, copie presse-papiers + `claude.ai/new?q=` pré-rempli (URL < 8000 caractères, sinon
+page vide où coller). Toute évolution de `archiveLogs()` doit garder `date === h.date`.
+
+Notes libres (`state.notes = [{id, date:'YYYY-MM-DD', text}]`, par profil, section « Notes »
+sous l'historique) : contexte pour Claude (maladie, semaine sautée, gêne). Le partage de séance
+inclut les notes depuis la séance précédente (ou 7 jours si première séance), le récap toutes
+celles du cycle. Elles partent dans l'export JSON.
 
 ## Export Garmin
 
