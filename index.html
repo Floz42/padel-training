@@ -1048,7 +1048,9 @@ const WEEK_NOTES = {
   3:'Semaines 3–4 : volume complet du format choisi.',
   5:'Semaines 5–6 : élastique plus résistant sur la force, <strong>+2 reps</strong> sur squat jumps et skaters — pas sur les fentes rebonds.',
   7:'Semaines 7–8 : tempo excentrique lent, <strong>3 s à la descente</strong> sur développé et tirage.',
-  9:'Semaine 9 : décharge à <strong>50 % du volume</strong>, puis on réévalue les repères.'
+  9:'Semaine 9 : décharge à <strong>50 % du volume</strong>, puis on réévalue les repères.',
+  10:'Semaines 10–12 : reprise après la décharge. <strong>Volume complet</strong>, mêmes exercices et mêmes reps qu’avant. Retrouve tes charges tranquillement, puis « Nouveau cycle » après la semaine 12.',
+  13:'Cycle terminé. Le volume reste complet : lance « Nouveau cycle » pour repartir.'
 };
 const PROGRESS_RULE = 'Règle permanente : quand tu tiens <strong>le haut de la fourchette sur toutes les séries</strong>, monte d\'une bande la fois suivante et repars en bas de fourchette. Note la bande à chaque séance, même si elle ne bouge pas.';
 function weekNote(w){
@@ -1057,13 +1059,15 @@ function weekNote(w){
   else if(w<=4) n = WEEK_NOTES[3];
   else if(w<=6) n = WEEK_NOTES[5];
   else if(w<=8) n = WEEK_NOTES[7];
-  else n = WEEK_NOTES[9];
+  else if(w===9) n = WEEK_NOTES[9];
+  else if(w<=12) n = WEEK_NOTES[10];
+  else n = WEEK_NOTES[13];
   return n + '<br><br>' + PROGRESS_RULE;
 }
 function effSets(base, week){
   if(!base) return 0;
   if(week<=2) return Math.max(2, base-1);
-  if(week>=9) return Math.max(1, Math.round(base/2));
+  if(week===9) return Math.max(1, Math.round(base/2));
   return base;
 }
 
@@ -1212,7 +1216,8 @@ function dayKey(d){
 /**
  * Semaine du programme a une date donnee : blocs de 7 jours depuis state.start
  * (jour de la premiere seance). Sans date de depart, on est en semaine 1.
- * Pas de plafond : au-dela de 9 on reste en decharge jusqu'au "Nouveau cycle".
+ * Pas de plafond : la semaine monte jusqu'au "Nouveau cycle". Decharge en S9 uniquement
+ * pour Flo (reprise S10-12) ; le profil Chloe reste en decharge a partir de S9.
  */
 function weekOf(date){
   if(!state.start) return 1;

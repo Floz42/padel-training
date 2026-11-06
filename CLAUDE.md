@@ -183,8 +183,9 @@ le schéma est **générée automatiquement** par `figLegend()` en détectant le
 ```
 
 **La semaine n'est plus choisie à la main.** `curWeek()` = bloc de 7 jours écoulé depuis
-`state.start` (+1), sans plafond : au-delà de 9 on reste en décharge jusqu'au bouton
-« Nouveau cycle », qui remet `start` à aujourd'hui sans toucher l'historique. `start` est posé
+`state.start` (+1), sans plafond. Pour Flo, la décharge ne dure que la semaine 9 : S10-12 sont
+une reprise au volume complet, puis la note invite à cliquer sur « Nouveau cycle ». Le profil
+Chloé reste en décharge à partir de S9 jusqu'à ce bouton, qui remet `start` à aujourd'hui sans toucher l'historique. `start` est posé
 par la première séance terminée. `migrate()` (au chargement et à l'import) convertit l'ancien
 schéma `week:N` : `start` = date de la plus ancienne entrée d'historique, et chaque entrée est
 renumérotée d'après sa date. Un export antérieur à ce changement s'importe donc sans rien faire.
