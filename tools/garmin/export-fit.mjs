@@ -33,7 +33,7 @@ const GARMIN = {
   tirage: ['row', 1], // cableRowStanding
   'tirage-vert': ['pullUp', 11], // kneelingLatPulldown
   ecarte: ['flye', 0], // cableCrossover
-  'dev-mil': ['shoulderPress', 15], // overheadDumbbellPress
+  'elev-lat': ['lateralRaise', 34], // dumbbellLateralRaise
   'planche-lat': ['plank', 66], // sidePlank
   pullover: ['pullUp', 19], // standingCablePullover
   'face-pull': ['row', 39], // bandedFacePulls
@@ -75,7 +75,7 @@ const loadProgram = () => {
 const effSets = (base, week) => {
   if (!base) return 0
   if (week <= 2) return Math.max(2, base - 1)
-  if (week >= 9) return Math.max(1, Math.round(base / 2))
+  if (week === 9) return Math.max(1, Math.round(base / 2))
   return base
 }
 

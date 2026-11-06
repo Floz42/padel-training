@@ -741,8 +741,8 @@ const PROGRAM = {
       note:'Le tirage du smash : bras au-dessus de la tête, tu ramènes les coudes vers les côtes. Si les épaules montent vers les oreilles en fin de série, c’est fini — le trapèze a pris le relais des dorsaux.'},
     {bloc:'Force', id:'ecarte', name:'Écarté Poulie Haute', detail:'ancrage haut · poignées', sets:{30:2,45:3,60:3}, reps:'12–15', rest:60, tier:30, swid:'1963667', sw:'pectoraux',
       note:'Remplace les pompes : les poignées gardent le poignet dans l’axe, sans l’écrasement de l’appui au sol. Coudes légèrement fléchis et figés — c’est l’épaule qui ouvre et ferme, jamais le coude.'},
-    {bloc:'Force', id:'dev-mil', name:'Développé Militaire Assis', detail:'assis, élastique sous les pieds', sets:{45:3,60:3}, reps:'10', rest:60, tier:45, swid:'1962143', sw:'epaule',
-      note:'Assis, tu ne peux pas compenser en cambrant le bas du dos — c’est tout l’intérêt par rapport au debout. Si tu dois te pencher en arrière pour finir la rep, l’élastique est trop résistant.'},
+    {bloc:'Force', id:'elev-lat', name:'Élévations Latérales', detail:'debout, élastique sous les pieds', sets:{45:3,60:3}, reps:'12–15', rest:45, tier:45, swid:'1962145', sw:'epaule',
+      note:'Bande légère : c’est un petit muscle. Tu montes les bras sur les côtés jusqu’à hauteur d’épaules, pas plus haut, coudes légèrement fléchis. Si tu hausses les épaules ou si tu donnes des à-coups, l’élastique est trop résistant.'},
     {bloc:'Force', id:'pullover',name:'Pull Over', detail:'ancrage haut · dos à la porte', sets:{60:3}, reps:'12', rest:60, tier:60, swid:'1963507', sw:'dos',
       note:'C’est le freinage du bras après le smash. Coudes presque tendus et figés : le mouvement part de l’épaule, en arc, jusqu’aux cuisses. Si les coudes plient pour finir la rep, tu fais du triceps — allège.'},
     {bloc:'Force', id:'face-pull', name:'Face Pull', detail:'ancrage au-dessus de la tête', sets:{30:2,45:3,60:3}, reps:'15', rest:45, tier:30, swid:'1962142', sw:'epaule',
@@ -913,14 +913,14 @@ const FIGURES = {
       + '<text x="4" y="86">poignet libre</text>',
     cap: 'Assis, avant-bras posé sur la cuisse, paume vers le bas, la main dépasse du genou. Élastique sous le pied, poignée en main. Seul le poignet bouge : tu relèves la main vers toi, puis tu la redescends lentement. L’avant-bras ne décolle pas de la cuisse.'
   },
-  'dev-mil': {
-    svg: '<circle class="hd" cx="46" cy="18" r="7"/><path class="b" d="M46 25 L46 56"/>'
-      + '<path class="b" d="M46 56 L70 58"/><path class="b" d="M70 58 L70 92"/>'
-      + '<rect class="anch" x="58" y="58" width="30" height="3"/>'
-      + '<path class="b" d="M46 31 L36 42 L38 30"/>'
-      + '<path class="band" d="M70 92 Q52 58 38 30"/>'
-      + '<path class="arr" d="M26 26 L26 8"/>',
-    cap: 'Assis au bord d’une chaise, dos droit, élastique passé sous les pieds. Mains à hauteur d’épaules, coudes pointant vers le bas. Tu pousses à la verticale sans reculer le buste : le dossier ou ton propre gainage bloquent la triche.'
+  'elev-lat': {
+    svg: '<circle class="hd" cx="60" cy="16" r="7"/><path class="b" d="M60 23 L60 58"/>'
+      + '<path class="b" d="M60 58 L50 92"/><path class="b" d="M60 58 L70 92"/>'
+      + '<path class="b" d="M60 30 L30 32"/><path class="b" d="M60 30 L90 32"/>'
+      + '<rect class="anch" x="40" y="92" width="40" height="3"/>'
+      + '<path class="band" d="M50 92 Q36 62 30 32"/><path class="band" d="M70 92 Q84 62 90 32"/>'
+      + '<path class="arr" d="M16 52 L16 34"/><path class="arr" d="M104 52 L104 34"/>',
+    cap: 'Debout, élastique sous les pieds, une poignée dans chaque main, bras le long du corps. Tu montes les bras sur les côtés jusqu’à hauteur d’épaules, coudes légèrement fléchis, puis tu redescends lentement. Le buste reste immobile et les épaules restent basses.'
   },
   'face-pull': {
     svg: '<circle class="hd" cx="48" cy="20" r="7"/><path class="b" d="M48 27 L48 58"/>'

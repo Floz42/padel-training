@@ -17,7 +17,7 @@ exactement comme dans l'app, et poser les liens `swid` vers les vidéos.
 | `dev-couche` | Développé Debout | 1963663 |
 | `tirage` | Tirage Horizontal Prise Large | 1963501 |
 | `ecarte` | Écarté Poulie Haute | 1963667 |
-| `dev-mil` | Développé Militaire Assis | 1962143 |
+| `elev-lat` | Élévations Latérales | 1962145 |
 | `tirage-vert` | Tirage Vertical | 1963499 |
 | `pullover` | Pull Over | 1963507 |
 | `face-pull` | Face Pull | 1962142 |
